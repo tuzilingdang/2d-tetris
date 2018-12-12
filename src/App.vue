@@ -1,6 +1,6 @@
 <template>
   <div id="app">
-    <Screen />
+    <Screen column-num="12" row-num="22" />
   </div>
 </template>
 
