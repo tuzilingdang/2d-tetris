@@ -2,16 +2,56 @@
 .keyboard {
     width: 80%;
     height: auto;
-    margin: 20px auto;
-    .rotate {
-        width: 24%;
-        float: right;
-        background: pink;
-        border-radius: 500px;
-        &:after {
-            content: '';
-            display: block;
-            padding-top: 100%;
+    margin: 10vh auto;
+    .arrows {
+        .left {
+
+        }
+        .up {
+            width: 100px;
+            height: 150px;
+            background: linear-gradient(-135deg, transparent 34px, #ace 0) top right, linear-gradient(135deg, transparent 34px, #ace 0) top left;
+            background-size: 50% 100%;
+            background-repeat: no-repeat;
+        }
+        .down {
+            margin-top: 1vh;
+            width: 100px;
+            height: 150px;
+            background: linear-gradient(-45deg, transparent 34px, #ace 0) right, linear-gradient(45deg, transparent 34px, #ace 0) left;
+            background-size: 50% 100%;
+            background-repeat: no-repeat;
         }
     }
+    .rotate {
+        width: 24%;
+        height: auto;
+        float: right;
+        &-btn {
+            width: 100%;
+            background: pink;
+            border-radius: 500px;
+            &:after {
+                content: '';
+                display: block;
+                padding-top: 100%;
+                // cursor: pointer;
+            }
+        }
+
+    }
+
+    // .circular {
+    //     float: right;
+    //     width: 40%;
+    //     font-size: 10px;
+    //     font-weight: 500;
+    //     path {
+    //         fill: none;
+    //     }
+    //     svg {
+    //         display: block;
+    //         overflow: visible;
+    //     }
+    // } 
  }

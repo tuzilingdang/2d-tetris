@@ -13,7 +13,14 @@
                 <div class="right"></div>
                 <div class="down"></div>
             </div>
-            <div class="rotate"></div>
+
+            <div class="rotate">
+                <div class="rotate-btn"></div>
+                <h2>Rotate/旋转</h2>
+            </div>
+
+
+            
         </div>
 
         
@@ -22,6 +29,16 @@
 
 <script>
     let a = 1
+
+
+            // <div class="circular"> 
+            //     <svg viewBox="0 0 50 50"> 
+            //         <path d="M 0,10 a 10,10 0 1,1 0,1 z" id="circle" /> 
+            //         <text> 
+            //             <textPath xlink:href="#circle"> rotate—> </textPath> 
+            //         </text>
+            //     </svg> 
+            // </div>
 </script>
 
 <style lang="less">
