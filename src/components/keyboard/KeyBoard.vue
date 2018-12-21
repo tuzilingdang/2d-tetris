@@ -9,8 +9,8 @@
         <div class="bottom-buttons">
             <div class="arrows">
                 <div class="left"></div>
-                <div class="up"></div>
                 <div class="right"></div>
+                <div class="up"></div>
                 <div class="down"></div>
             </div>
 
@@ -18,8 +18,6 @@
                 <div class="rotate-btn"></div>
                 <h2>Rotate/旋转</h2>
             </div>
-
-
             
         </div>
 
