@@ -10,7 +10,7 @@ class Block {
 
         switch (type) {
         case 'L':
-            this.pos = { x: 4, y: -1 }
+            this.pos = { x: -1, y: 4 }
             break
         default:
             break
@@ -21,15 +21,16 @@ class Block {
 
     }
     right() {}
-    down() {
-        this.pos.y ++;
-
+    down(matrix) {
+        this.pos.x ++;
+        if(this.pos.x >= matrix.length) return 
         for(let i = 0; i < this.shape.length; i++) {
-            for(let j = 0; j < this.shape.length; j++) {
-                
+            for(let j = 0; j < this.shape[i].length; j++) {
+                matrix[this.pos.x + i][this.pos.y + j] = this.shape[i][j]
             }
         }
-        this.matrix = 
+
+        return matrix;
     }
     fall() {}
     rotate() {}

@@ -1,7 +1,6 @@
 <template>
     <div id="app">
         <div id="game">
-            <WebglTest />
             <Screen column-num="12" row-num="22" />
             <KeyBoard />
         </div>
@@ -12,14 +11,12 @@
 <script>
     import Screen from './components/screen/Screen.vue'
     import KeyBoard from './components/keyboard/KeyBoard.vue'
-    import WebglTest from './components/WebglTest.vue'
 
     export default {
         name: 'app',
         components: {
             Screen,
             KeyBoard,
-            WebglTest
         }
     }
 </script>
