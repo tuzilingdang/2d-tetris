@@ -24,16 +24,23 @@ class Block {
     down(matrix) {
         this.pos.x ++;
         if(this.pos.x >= matrix.length) return 
+
+        matrix[this.pos.x][this.pos.y - 1] = 0
+        
         for(let i = 0; i < this.shape.length; i++) {
             for(let j = 0; j < this.shape[i].length; j++) {
-                matrix[this.pos.x + i][this.pos.y + j] = this.shape[i][j]
+                matrix[this.pos.x + i].splice(this.pos.y + j, 1 ,this.shape[i][j])
             }
         }
 
-        return matrix;
+        // return matrix;
     }
     fall() {}
     rotate() {}
+
+    get_d1_matrix(matrix) {
+        matrix[2] = 1;
+    }
 }
 
 export default Block

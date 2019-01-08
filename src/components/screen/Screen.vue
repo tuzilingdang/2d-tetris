@@ -6,6 +6,12 @@
                     <div class="square-inner"></div>
                 </div>
             </div>
+
+            <div class="screen-grid-area">
+                <div class="square" :class="d1_matrix[n] ? 'black':''" v-for="n in d1_matrix.length" :id="`${n }`" v-bind:key="n">
+                    <div class="square-inner"></div>
+                </div>
+            </div>
         </div>
 
         <div class="screen-status">
@@ -30,7 +36,8 @@
         },
         data: function () {
             return {
-                matrix:[]
+                matrix:[],
+                d1_matrix: [0,0,0,0]
             };
         },
         created() {
@@ -45,19 +52,27 @@
             start() {
                 let block = new Block('L')
                 let that = this;
-                that.matrix = block.down(that.matrix)
-                // setInterval(()=> {
-                //     that.matrix = block.down(that.matrix)
-                // }, 1000)
                 
+                this.$nextTick(() => {
+                   block.down(that.matrix)
+                })
+
+                setTimeout(()=> {
+                   block.down(that.matrix)
+                }, 3000)
+                
+                block.get_d1_matrix(this.d1_matrix)
+                debugger
+
             },
 
             initMatrix() {
-                this.matrix = new Array()
+                // this.matrix = new Array()
                 for(let i = 0; i < this.rowNum; i++) {
-                    this.matrix[i]=new Array(); 
+                    // this.matrix[i]=new Array(); 
+                    this.$set(this.matrix, i, new Array())
                     for(let j = 0; j < this.columnNum; j++){
-                        this.matrix[i][j] = 0
+                        this.$set(this.matrix[i], j, 0)
                     }
                 }
             }
