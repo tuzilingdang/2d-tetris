@@ -7,11 +7,12 @@
                 </div>
             </div>
 
-            <div class="screen-grid-area">
+            <!-- test 1维数组  -->
+            <!-- <div class="screen-grid-area">
                 <div class="square" :class="d1_matrix[n] ? 'black':''" v-for="n in d1_matrix.length" :id="`${n }`" v-bind:key="n">
                     <div class="square-inner"></div>
                 </div>
-            </div>
+            </div> -->
         </div>
 
         <div class="screen-status">
@@ -36,8 +37,8 @@
         },
         data: function () {
             return {
-                matrix:[],
-                d1_matrix: [0,0,0,0]
+                matrix: [],
+                d1_matrix: [0, 0, 0, 0]
             };
         },
         created() {
@@ -52,26 +53,20 @@
             start() {
                 let block = new Block('L')
                 let that = this;
-                
-                this.$nextTick(() => {
-                   block.down(that.matrix)
-                })
 
-                setTimeout(()=> {
-                   block.down(that.matrix)
-                }, 3000)
-                
-                block.get_d1_matrix(this.d1_matrix)
-                debugger
+                let interval = setInterval(() => {
+                    if (!block.down(that.matrix))
+                        clearInterval(interval)
+                }, 1000)
 
             },
 
             initMatrix() {
                 // this.matrix = new Array()
-                for(let i = 0; i < this.rowNum; i++) {
+                for (let i = 0; i < this.rowNum; i++) {
                     // this.matrix[i]=new Array(); 
                     this.$set(this.matrix, i, new Array())
-                    for(let j = 0; j < this.columnNum; j++){
+                    for (let j = 0; j < this.columnNum; j++) {
                         this.$set(this.matrix[i], j, 0)
                     }
                 }

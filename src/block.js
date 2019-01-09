@@ -21,21 +21,27 @@ class Block {
 
     }
     right() {}
+
     down(matrix) {
         this.pos.x ++;
-        if(this.pos.x >= matrix.length) return 
+        if(this.pos.x > matrix.length - this.shape.length) return false
 
-        matrix[this.pos.x][this.pos.y - 1] = 0
-        
+        if(this.pos.x - 1 >= 0) {
+            for(let i = 0; i< this.shape[0].length; i ++)
+                matrix[this.pos.x - 1].splice(this.pos.y + i, 1 ,0)
+        }
+    
         for(let i = 0; i < this.shape.length; i++) {
             for(let j = 0; j < this.shape[i].length; j++) {
                 matrix[this.pos.x + i].splice(this.pos.y + j, 1 ,this.shape[i][j])
             }
         }
 
-        // return matrix;
+        return true
     }
+
     fall() {}
+    
     rotate() {}
 
     get_d1_matrix(matrix) {
