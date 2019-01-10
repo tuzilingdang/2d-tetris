@@ -1,7 +1,8 @@
 <template>
     <div id="app">
         <div id="game">
-            <Screen column-num="12" row-num="22" />
+            <!-- <Screen column-num="12" row-num="22" /> -->
+            <Screen />
             <KeyBoard />
         </div>
 

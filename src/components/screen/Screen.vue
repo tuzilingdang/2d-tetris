@@ -26,21 +26,26 @@
 </template>
 
 <script>
+    import { mapState } from 'vuex'
     import Block from '../../block'
 
     export default {
         name: 'Screen',
-        props: {
-            msg: String,
-            columnNum: Number,
-            rowNum: Number
-        },
+        // props: {
+        //     msg: String,
+        //     columnNum: Number,
+        //     rowNum: Number
+        // },
         data: function () {
             return {
                 matrix: [],
                 d1_matrix: [0, 0, 0, 0]
             };
         },
+        computed: mapState([
+            'columnNum',
+            'rowNum'
+        ]),
         created() {
             this.init()
         },
