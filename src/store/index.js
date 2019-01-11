@@ -8,12 +8,19 @@ Vue.use(Vuex)
 
 const state = {
     columnNum: 12,
-    rowNum: 22
+    rowNum: 22,
+    matrix: []
 }
 
 export default new Vuex.Store({
     state,
     // getters,
     // actions,
-    // mutations
+    mutations: {
+        down(state, payload) {
+            let interval = setInterval(function(){
+                if(!payload.block.down(state.matrix)) clearInterval(interval)
+            }, 1000)
+        }
+    }
   })

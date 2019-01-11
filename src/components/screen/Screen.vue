@@ -38,13 +38,14 @@
         // },
         data: function () {
             return {
-                matrix: [],
+                // matrix: [],
                 d1_matrix: [0, 0, 0, 0]
             };
         },
         computed: mapState([
             'columnNum',
-            'rowNum'
+            'rowNum',
+            'matrix'
         ]),
         created() {
             this.init()
@@ -59,11 +60,10 @@
                 let block = new Block('L')
                 let that = this;
 
-                let interval = setInterval(() => {
-                    if (!block.down(that.matrix))
-                        clearInterval(interval)
-                }, 1000)
-
+                this.$store.commit({
+                    type: 'down',
+                    block
+                })
             },
 
             initMatrix() {
