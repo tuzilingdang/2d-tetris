@@ -9,12 +9,22 @@ class Block {
         this.shape = BLOCK_TYPE[type]
 
         switch (type) {
-        case 'L':
-            this.pos = { x: -1, y: 4 }
-            break
-        default:
-            break
+            case 'L':
+            case 'I':
+                this.pos = { x: -1, y: 4 }
+                break
+
+            default:
+                break
         }
+    }
+
+    get shape() {
+        return this._shape
+    }
+
+    set shape(value) {
+        this._shape = value
     }
 
     left() {
@@ -22,9 +32,9 @@ class Block {
     }
     right() {}
 
-    down(matrix) {
+    down(matrix, accRows) {
         this.pos.x ++;
-        if(this.pos.x > matrix.length - this.shape.length) return false
+        if(this.pos.x > matrix.length - this.shape.length - accRows) return false
 
         if(this.pos.x - 1 >= 0) {
             for(let i = 0; i< this.shape[0].length; i ++)

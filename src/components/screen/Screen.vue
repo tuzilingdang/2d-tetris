@@ -28,6 +28,8 @@
 <script>
     import { mapState } from 'vuex'
     import Block from '../../block'
+    // import func from './vue-temp/vue-editor-bridge';
+    import { BLOCK_INDEX } from '../../const'
 
     export default {
         name: 'Screen',
@@ -45,8 +47,15 @@
         computed: mapState([
             'columnNum',
             'rowNum',
-            'matrix'
+            'matrix',
+            'randomBlock'
         ]),
+    
+        watch: {
+            randomBlock: function(newVal){
+                if(newVal) this.nextBlock()
+            }
+        },
         created() {
             this.init()
         },
@@ -57,8 +66,21 @@
             },
 
             start() {
-                let block = new Block('L')
-                let that = this;
+                let block = this.getRandomBlock()
+
+                this.$store.commit({
+                    type: 'down',
+                    block
+                })
+            },
+
+            nextBlock () {
+                let block = this.getRandomBlock()
+
+                this.$store.commit({
+                    type:'nextBlock',
+                    shape: block._shape
+                })
 
                 this.$store.commit({
                     type: 'down',
@@ -67,14 +89,18 @@
             },
 
             initMatrix() {
-                // this.matrix = new Array()
                 for (let i = 0; i < this.rowNum; i++) {
-                    // this.matrix[i]=new Array(); 
                     this.$set(this.matrix, i, new Array())
                     for (let j = 0; j < this.columnNum; j++) {
                         this.$set(this.matrix[i], j, 0)
                     }
                 }
+            },
+
+            getRandomBlock() {
+                let random = Math.floor(Math.random()*BLOCK_INDEX.length )
+                let type = BLOCK_INDEX[random]
+                return new Block(type)
             }
         }
     }
