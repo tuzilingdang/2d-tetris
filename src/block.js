@@ -9,11 +9,11 @@ class Block {
         this.shape = BLOCK_TYPE[type]
 
         switch (type) {
-        case 'L':
-            this.pos = { x: -1, y: 4 }
-            break
-        default:
-            break
+            case 'L':
+                this.pos = { x: -1, y: 4 }
+                break
+            default:
+                break
         }
     }
 

@@ -38,13 +38,14 @@
         // },
         data: function () {
             return {
-                matrix: [],
+                // matrix: [],
                 d1_matrix: [0, 0, 0, 0]
             };
         },
         computed: mapState([
             'columnNum',
-            'rowNum'
+            'rowNum',
+            'matrix'
         ]),
         created() {
             this.init()
@@ -59,20 +60,19 @@
                 let block = new Block('L')
                 let that = this;
 
-                let interval = setInterval(() => {
-                    if (!block.down(that.matrix))
-                        clearInterval(interval)
-                }, 1000)
+                this.$store.commit({
+                    type: 'down',
+                    block
+                })
 
             },
 
             initMatrix() {
-                // this.matrix = new Array()
+                let matrix = this.$store.state.matrix
                 for (let i = 0; i < this.rowNum; i++) {
-                    // this.matrix[i]=new Array(); 
-                    this.$set(this.matrix, i, new Array())
+                    this.$set(matrix, i, new Array())
                     for (let j = 0; j < this.columnNum; j++) {
-                        this.$set(this.matrix[i], j, 0)
+                        this.$set(matrix[i], j, 0)
                     }
                 }
             }
