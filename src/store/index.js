@@ -35,7 +35,7 @@ export default new Vuex.Store({
                     state.accRows += payload.block.shapeLength ? payload.block.shapeLength : 0
                     state.randomBlock = true
                 }
-            }, 100)
+            }, 1000)
         },
 
         setCurBlock(state, payload) {

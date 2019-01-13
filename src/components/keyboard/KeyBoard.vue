@@ -9,7 +9,7 @@
         <div class="bottom-buttons">
             <div class="arrows">
                 <div class="left" @click="left"></div>
-                <div class="right" @click="right">></div>
+                <div class="right" @click="right"></div>
                 <div class="up"></div>
                 <div class="down"></div>
             </div>
