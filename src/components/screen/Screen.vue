@@ -1,8 +1,10 @@
 <template>
     <div class="screen">
         <div class="screen-grid">
+            <img class="game_over_img" src="../../assets/wilson_pixel_game_over.png" v-if="gameOver" alt="">
+            <i class="game_over" v-if="gameOver"></i>
             <div class="screen-grid-area">
-                <div class="square" :class="matrix[parseInt((n-1)/columnNum)][(n-1)%columnNum ] ? 'black':''" v-for="n in columnNum*rowNum" :id="`${parseInt((n-1)/columnNum)}-${(n-1)%columnNum }`" v-bind:key="n">
+                <div class="square" :class="!gameOver && matrix[parseInt((n-1)/columnNum)][(n-1)%columnNum ] ? 'black':''" v-for="n in columnNum*rowNum" :id="`${parseInt((n-1)/columnNum)}-${(n-1)%columnNum }`" v-bind:key="n">
                     <div class="square-inner"></div>
                 </div>
             </div>
@@ -28,6 +30,8 @@
 <script>
     import { mapState } from 'vuex'
     import Block from '../../block'
+    // import func from './vue-temp/vue-editor-bridge';
+    import { BLOCK_INDEX } from '../../const'
 
     export default {
         name: 'Screen',
@@ -45,8 +49,17 @@
         computed: mapState([
             'columnNum',
             'rowNum',
-            'matrix'
+            'matrix',
+            'randomBlock',
+            'accRows',
+            'gameOver'
         ]),
+
+        watch: {
+            randomBlock: function (newVal) {
+                if (newVal) this.nextBlock()
+            }
+        },
         created() {
             this.init()
         },
@@ -57,24 +70,55 @@
             },
 
             start() {
-                let block = new Block('L')
-                let that = this;
+                let block = this.getRandomBlock()
+
+                this.$store.commit({
+                    type: 'setCurBlock',
+                    block
+                })
 
                 this.$store.commit({
                     type: 'down',
                     block
                 })
+            },
 
+            nextBlock() {
+                if (this.accRows > this.rowNum) {
+                    this.$store.commit('gameOver')
+                    return
+                }
+
+                let block = this.getRandomBlock()
+
+                this.$store.commit({
+                    type: 'setCurBlock',
+                    block
+                })
+
+                this.$store.commit({
+                    type: 'nextBlock',
+                })
+
+                this.$store.commit({
+                    type: 'down',
+                    block
+                })
             },
 
             initMatrix() {
-                let matrix = this.$store.state.matrix
                 for (let i = 0; i < this.rowNum; i++) {
-                    this.$set(matrix, i, new Array())
+                    this.$set(this.matrix, i, new Array())
                     for (let j = 0; j < this.columnNum; j++) {
-                        this.$set(matrix[i], j, 0)
+                        this.$set(this.matrix[i], j, 0)
                     }
                 }
+            },
+
+            getRandomBlock() {
+                let random = Math.floor(Math.random() * BLOCK_INDEX.length)
+                let type = BLOCK_INDEX[random]
+                return new Block(type)
             }
         }
     }

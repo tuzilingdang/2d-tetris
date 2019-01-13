@@ -8,8 +8,8 @@
 
         <div class="bottom-buttons">
             <div class="arrows">
-                <div class="left"></div>
-                <div class="right"></div>
+                <div class="left" @click="left"></div>
+                <div class="right" @click="right">></div>
                 <div class="up"></div>
                 <div class="down"></div>
             </div>
@@ -26,17 +26,44 @@
 </template>
 
 <script>
-    let a = 1
+    import { mapState } from 'vuex'
+    import Block from '../../block'
+    // import func from './vue-temp/vue-editor-bridge';
+    import { BLOCK_INDEX } from '../../const'
 
+    export default {
+        name: 'KeyBoard',
+        data: function () {
+            return {
+                // matrix: [],
+                d1_matrix: [0, 0, 0, 0]
+            };
+        },
+        computed: mapState([
+            'matrix',
+            'accRows',
+            'gameOver'
+        ]),
 
-            // <div class="circular"> 
-            //     <svg viewBox="0 0 50 50"> 
-            //         <path d="M 0,10 a 10,10 0 1,1 0,1 z" id="circle" /> 
-            //         <text> 
-            //             <textPath xlink:href="#circle"> rotate—> </textPath> 
-            //         </text>
-            //     </svg> 
-            // </div>
+        watch: {
+
+        },
+
+        methods: {
+            left() {
+                this.$store.commit({
+                    type: 'left'
+                })
+            },
+
+            right() {
+                this.$store.commit({
+                    type: 'right'
+                })
+            },
+
+        }
+    }
 </script>
 
 <style lang="less">

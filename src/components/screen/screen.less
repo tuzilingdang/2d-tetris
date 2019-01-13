@@ -12,6 +12,7 @@
         height: 100%;
         border-right: 1px solid #666;
         padding: 1%;
+
         &-area {
             width: 100%;
             height: 100%;
@@ -22,26 +23,49 @@
             grid-row-gap: 2px;
             grid-column-gap: 2px;
         }
+
+        .game_over {
+            position: absolute;
+            width: 33%;
+            height: 2vh;
+            left: 24%;
+            top: 46.5vh;
+            background: url(../../assets/game_over.png);
+            background-repeat: no-repeat;
+            background-size: 100% 100%;
+        }
+
+        .game_over_img {
+            position: absolute;
+            width: 30%;
+            left: 25%;
+            top: 30vh;
+        }
+
         .square {
             border: #6666662e 1px solid;
-            margin: 0px 0px -1px -1px; 
+            margin: 0px 0px -1px -1px;
+
             &:after {
                 content: '';
                 display: block;
                 padding-top: 100%;
-            } 
+            }
+
             &-status {
                 margin-left: 2%;
                 width: 30%;
                 border: #666 1px solid;
             }
+
             &-inner {
                 float: left;
                 width: 60%;
                 margin-left: 20%;
                 margin-top: 20%;
+
                 &:after {
-                    content:'';
+                    content: '';
                     display: block;
                     padding-top: 100%;
                     background: #66666617;
@@ -51,6 +75,7 @@
 
         .black {
             border: #666 1px solid;
+
             .square-inner:after {
                 content: '';
                 display: block;
@@ -60,5 +85,3 @@
         }
     }
 }
-
-
