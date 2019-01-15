@@ -62,7 +62,7 @@ class Block {
             return true
     }
 
-    down(matrix, accRows) {
+    down(matrix) {
         // if(this.pos.x + 1 > matrix.length - this.shape.length - accRows) return false
 
         if(this.pos.x + 1 > matrix.length - this.shape.length) return false
@@ -86,7 +86,20 @@ class Block {
         return true
     }
 
-    fall() {}
+    fall(matrix) {
+        for(let i = 0; i < this.shape.length; i++) {
+            for(let j = 0; j < this.shape[i].length; j++) {
+                matrix[this.pos.x + i].splice(this.pos.y + j, 1 ,0)
+            }
+        }
+
+        this.pos.x = matrix.length - this.shape.length 
+        for(let i = 0; i < this.shape.length; i++) {
+            for(let j = 0; j < this.shape[i].length; j++) {
+                matrix[this.pos.x + i].splice(this.pos.y + j, 1 ,this.shape[i][j])
+            }
+        }
+    }
     
     rotate() {}
 

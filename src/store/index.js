@@ -28,6 +28,10 @@ export default new Vuex.Store({
             state.curBlock.right(state.matrix)
         },
 
+        fall(state) {
+            state.curBlock.fall(state.matrix)
+        },
+
         down(state, payload) {
             let interval = setInterval(function(){
                 if(!payload.block.down(state.matrix, state.accRows)) {

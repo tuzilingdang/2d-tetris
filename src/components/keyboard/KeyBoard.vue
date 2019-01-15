@@ -11,28 +11,29 @@
                 <div class="left" @click="left"></div>
                 <div class="right" @click="right"></div>
                 <div class="up"></div>
-                <div class="down"></div>
+                <div class="down" @click="fall"></div>
             </div>
 
-            <div class="rotate">
+            <div class="rotate" @click="start">
                 <div class="rotate-btn"></div>
                 <h2>Rotate/旋转</h2>
             </div>
-            
-        </div>
 
-        
+        </div>
     </div>
 </template>
 
 <script>
     import { mapState } from 'vuex'
     import Block from '../../block'
-    // import func from './vue-temp/vue-editor-bridge';
-    import { BLOCK_INDEX } from '../../const'
 
     export default {
         name: 'KeyBoard',
+        // props: {
+        //     msg: String,
+        //     columnNum: Number,
+        //     rowNum: Number
+        // },
         data: function () {
             return {
                 // matrix: [],
@@ -40,32 +41,49 @@
             };
         },
         computed: mapState([
+            'columnNum',
+            'rowNum',
             'matrix',
+            'randomBlock',
             'accRows',
             'gameOver'
         ]),
 
         watch: {
-
+            randomBlock: function (newVal) {
+                if (newVal) this.nextBlock()
+            }
         },
-
+        created() {},
         methods: {
+
+            start() {
+                alert('start')
+            },
+
             left() {
                 this.$store.commit({
-                    type: 'left'
+                    type: 'left',
                 })
             },
 
             right() {
                 this.$store.commit({
-                    type: 'right'
+                    type: 'right',
                 })
             },
+
+            fall() {
+                this.$store.commit({
+                    type: 'fall',
+                })
+            },
+
 
         }
     }
 </script>
 
 <style lang="less">
- @import './keyboard.less';
+    @import './keyboard.less';
 </style>
