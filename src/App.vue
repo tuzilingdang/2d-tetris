@@ -3,6 +3,7 @@
         <div id="game">
             <Screen />
             <KeyBoard />
+            <!-- <HelloWorld /> -->
         </div>
 
     </div>
@@ -11,12 +12,14 @@
 <script>
     import Screen from './components/screen/Screen.vue'
     import KeyBoard from './components/keyboard/KeyBoard.vue'
+    import HelloWorld from './components/HelloWorld.vue'
 
     export default {
         name: 'app',
         components: {
             Screen,
             KeyBoard,
+            HelloWorld
         }
     }
 </script>

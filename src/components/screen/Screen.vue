@@ -17,7 +17,7 @@
             </div> -->
         </div>
 
-        <div class="screen-status">
+        <div class="screen-status" style="width:100px;height:100px;background: red;" @click="status">
             <div class="screen-status-grade"></div>
             <div class="screen-status-best-grade"></div>
             <div class="screen-status-next-shape"></div>
@@ -67,6 +67,10 @@
             init() {
                 this.initMatrix()
                 this.start()
+            },
+
+            status() {
+                alert('start')
             },
 
             start() {

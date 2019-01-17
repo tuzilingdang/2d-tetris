@@ -10,13 +10,13 @@
             <div class="arrows">
                 <div class="left" @click="left"></div>
                 <div class="right" @click="right"></div>
-                <div class="up"></div>
+                <div class="up" ></div>
                 <div class="down" @click="fall"></div>
             </div>
 
-            <div class="rotate" @click="start">
-                <div class="rotate-btn"></div>
-                <h2>Rotate/旋转</h2>
+            <div class="rotate" >
+                <div class="rotate-btn" @click="start" ></div>
+                <span>旋转</span>
             </div>
 
         </div>
@@ -25,7 +25,6 @@
 
 <script>
     import { mapState } from 'vuex'
-    import Block from '../../block'
 
     export default {
         name: 'KeyBoard',
@@ -44,24 +43,20 @@
             'columnNum',
             'rowNum',
             'matrix',
-            'randomBlock',
             'accRows',
             'gameOver'
         ]),
 
-        watch: {
-            randomBlock: function (newVal) {
-                if (newVal) this.nextBlock()
-            }
-        },
-        created() {},
+        // created() {
+        //     this.start()
+        // },
         methods: {
 
             start() {
                 alert('start')
             },
 
-            left() {
+            left: function(){
                 this.$store.commit({
                     type: 'left',
                 })
