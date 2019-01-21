@@ -51,7 +51,7 @@
             'rowNum',
             'matrix',
             'randomBlock',
-            'accRows',
+            'accRowsList',
             'gameOver'
         ]),
 
@@ -66,6 +66,7 @@
         methods: {
             init() {
                 this.initMatrix()
+                // this.initAccRows()
                 this.start()
             },
 
@@ -118,6 +119,10 @@
                     }
                 }
             },
+
+            // initAccRows() {
+            //     this.accRowsList = Array(this.columnNum).fill(0)
+            // },
 
             getRandomBlock() {
                 let random = Math.floor(Math.random() * BLOCK_INDEX.length)

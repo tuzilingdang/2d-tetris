@@ -43,7 +43,7 @@
             'columnNum',
             'rowNum',
             'matrix',
-            'accRows',
+            'accRowsList',
             'gameOver'
         ]),
 
@@ -71,6 +71,7 @@
             fall() {
                 this.$store.commit({
                     type: 'fall',
+                    accRowsList: this.accRowsList
                 })
             },
 
