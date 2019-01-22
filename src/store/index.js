@@ -27,12 +27,15 @@ export default new Vuex.Store({
         },
 
         fall(state,payload) {
-            state.curBlock.fall(state.matrix, payload.accRowsList)
+            if(!state.curBlock.fall(state.matrix, payload.accRowsList)) {
+                // this.gameOver()
+                state.randomBlock = true
+            }
         },
 
         down(state, payload) {
             let interval = setInterval(function(){
-                if(!payload.block.down(state.matrix, state.accRows)) {
+                if(!payload.block.down(state.matrix, state.accRowsList)) {
                     clearInterval(interval)
 
                     // let shapeColHeight = Array(payload.block.shapeWidth).fill(0)
@@ -42,14 +45,19 @@ export default new Vuex.Store({
                     //     }        
                     //     state.accRowsList[payload.block.pos.y + i] += shapeColHeight[i]
                     // }
-                    let block = payload.block
-                    for (let i = 0; i < block.shapeHeight; i++) {
-                        for (let j = 0; j < block.shapeWidth; j++) {
-                            if ((block.shape[i][j] && i == 0) || (block.shape[i][j] && i > 0 && !block.shape[i - 1][j]))
-                                state.accRowsList[block.pos.y + j] += block.pos.x + i
-                        }
+                    // let block = payload.block
+                    // for (let i = 0; i < block.shapeHeight; i++) {
+                    //     for (let j = 0; j < block.shapeWidth; j++) {
+                    //         // if ((block.shape[i][j] && i == 0) || (block.shape[i][j] && i > 0 && !block.shape[i - 1][j]))
+                    //         //     state.accRowsList[block.pos.y + j] += block.pos.x + i
+
+                    //         if(block.shape[i][j] && i == 0 ) state.accRowsList[block.pos.y + j] += block.shapeHeight;
+                    //         if(block.shape[i][j] && i > 0 && !block.shape[i - 1][j]) state.accRowsList[block.pos.y + j] +=block.shapeHeight - i;
+                    //     }
             
-                    }
+                    // }
+                    let accMax = Math.max(state.accRowsList) 
+                    if(accMax > state.matrix) this.gameOver()
 
                     state.randomBlock = true
                 }

@@ -89,24 +89,77 @@ class Block {
     }
 
     fall(matrix, accRowsList) {
-        for (let i = 0; i < this.shape.length; i++) {
-            for (let j = 0; j < this.shape[i].length; j++) {
-                matrix[this.pos.x + i].splice(this.pos.y + j, 1, 0)
-            }
-        }
-
+        const shapeHeight = this.shape.length
+        const shapeWidth = this.shape[0].length
+        const prePosX = this.pos.x
+        const posY = this.pos.y
         let sliceArr = accRowsList.slice(this.pos.y, this.pos.y + this.shape[0].length)
         let accMax = Math.max(...sliceArr)
+        if(accMax > matrix.length) return false
+        // let prePosX = this.pos.x
 
-        this.pos.x = matrix.length - this.shape.length - accMax
-        for (let i = 0; i < this.shape.length; i++) {
-            for (let j = 0; j < this.shape[i].length; j++) {
-                matrix[this.pos.x + i].splice(this.pos.y + j, 1, this.shape[i][j])
-                if ((this.shape[i][j] && i == 0) || (this.shape[i][j] && i > 0 && !this.shape[i - 1][j]))
-                    accRowsList[this.pos.y + j] += this.shape.length - i
+        // this.pos.x = matrix.length - this.shape.length - accMax
+        // let bottomX = matrix.length - accMax
+
+        // for(let k = 0; k < shapeWidth; k ++) {
+        //     if(this.shape[shapeHeight - 1][k] && matrix[bottomX][k]) {
+        //         this.pos.x = bottomX - shapeWidth;
+        //         break;
+        //     }
+        // }
+        
+        const getPosX = (bottomX) => {
+            let posX = 0
+            for(let k = 0; k < shapeWidth; k ++) {
+                if(this.shape[shapeHeight - 1][k] && matrix[bottomX] && matrix[bottomX][posY + k]) {
+                    posX = bottomX - shapeHeight;
+                    break;
+                }
             }
 
+            if(posX == 0 && bottomX  <= matrix.length -1 ) {
+                getPosX(++bottomX)
+            } 
+
+            return bottomX - shapeHeight 
         }
+
+        this.pos.x = getPosX(matrix.length - accMax - 1)
+
+        for(let i = 0; i < shapeHeight; i ++ ) {
+            for(let j = 0;  j < shapeWidth; j++) {
+                matrix[this.pos.x + i].splice(posY + j, 1, this.shape[i][j])
+                matrix[prePosX + i].splice(posY + j, 1, 0)
+                if(i == 0)  {
+                    accRowsList[posY + j] = this.shape[i][j] ?  matrix.length - this.pos.x : matrix.length - this.pos.x - 1
+                } 
+            }
+        }
+
+        return true
+
+        // for (let i = 0; i < this.shape.length; i++) {
+        //     for (let j = 0; j < this.shape[0].length; j++) {
+        //         matrix[prePosX + i].splice(this.pos.y + j, 1, 0)
+
+        //     }
+        // }
+
+
+
+        // for (let i = 0; i < this.shape.length; i++) {
+        //     for (let j = 0; j < this.shape[0].length; j++) {
+        //         matrix[this.pos.x + i].splice(this.pos.y + j, 1, this.shape[i][j])
+
+        //         if(this.shape[i][j] && i == 0 ) {
+        //             accRowsList[this.pos.y + j] += this.shape.length;
+        //         } 
+        //         if(this.shape[i][j] && i > 0 && !this.shape[i - 1][j]){
+        //             accRowsList[this.pos.y + j] +=this.shape.length - i;
+        //         } 
+        //     }
+
+        // }
     }
 
     rotate() {}
