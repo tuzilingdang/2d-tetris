@@ -9,8 +9,16 @@ class Block {
 
         switch (type) {
         case 'L':
-        case 'I':
+        case 'J':
+        case 'Z':
+        case 'S':
+        case 'T':
             this.pos = { x: -1, y: 4, accRows: 0 }
+            break
+            
+        case 'I':
+        case 'O':
+            this.pos = { x: -1, y: 5, accRows: 0 }
             break
 
         default:
