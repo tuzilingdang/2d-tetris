@@ -99,6 +99,7 @@ class Block {
     fall(matrix, accRowsList) {
         const shapeHeight = this.shape.length
         const shapeWidth = this.shape[0].length
+        const shape = this.shape
         const prePosX = this.pos.x
         const posY = this.pos.y
         let sliceArr = accRowsList.slice(this.pos.y, this.pos.y + this.shape[0].length)
@@ -116,34 +117,44 @@ class Block {
         //     }
         // }
         
-        const getPosX = (bottomX) => {
-            let posX = 0
-            for(let k = 0; k < shapeWidth; k ++) {
-                if(this.shape[shapeHeight - 1][k] && matrix[bottomX] && matrix[bottomX][posY + k]) {
-                    posX = bottomX - shapeHeight;
-                    break;
+        const getPosX = (bottomX, preVal) => {
+            let posX = preVal
+
+            for(let h = shapeHeight - 1; h >= 0 ; h--) {
+                for(let k = 0; k < shapeWidth; k ++) {
+                    if(shape[h][k] && matrix[bottomX] && matrix[bottomX][posY + k]) {
+                        posX = bottomX - h - 1;
+                        break;
+                    }
                 }
+                if (posX != preVal) break;
             }
 
-            if(posX == 0 && bottomX  <= matrix.length -1 ) {
-                getPosX(++bottomX)
+            if(posX == preVal && bottomX  <= matrix.length -1 ) {
+                return  getPosX(++bottomX, posX)
+                 
             } 
 
-            return bottomX - shapeHeight 
+            return posX != preVal ? posX : bottomX - shapeHeight;
         }
 
-        this.pos.x = getPosX(matrix.length - accMax - 1)
+        // const getPosX = (bottomX, preVal) => {
+        //     if(bottomX  <= matrix.length -1 ) 
+        // }
+
+        this.pos.x = getPosX(matrix.length - accMax - 1, this.pos.x)
 
         for(let i = 0; i < shapeHeight; i ++ ) {
             for(let j = 0;  j < shapeWidth; j++) {
-                matrix[this.pos.x + i].splice(posY + j, 1, this.shape[i][j])
+                if(!(matrix[this.pos.x + i] && matrix[this.pos.x + i][posY + j])) {
+                    matrix[this.pos.x + i].splice(posY + j, 1, shape[i][j])
+                }
                 matrix[prePosX + i].splice(posY + j, 1, 0)
                 if(i == 0)  {
-                    accRowsList[posY + j] = this.shape[i][j] ?  matrix.length - this.pos.x : matrix.length - this.pos.x - 1
+                    accRowsList[posY + j] = shape[i][j] ?  matrix.length - this.pos.x : matrix.length - this.pos.x - 1
                 } 
             }
         }
-
         return true
 
         // for (let i = 0; i < this.shape.length; i++) {
@@ -152,8 +163,6 @@ class Block {
 
         //     }
         // }
-
-
 
         // for (let i = 0; i < this.shape.length; i++) {
         //     for (let j = 0; j < this.shape[0].length; j++) {
