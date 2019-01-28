@@ -7,10 +7,11 @@ const state = {
     columnNum: 12,
     rowNum: 22,
     matrix: [],
-    randomBlock: false,  // 是否获取随机形状
+    randomBlock: false, // 是否获取随机形状
     accRowsList: Array(12).fill(0), // 已累积行数
-    gameOver: false ,
-    curBlock: {}  // 当前下落的小方块
+    gameOver: false,
+    curBlock: {}, // 当前下落的小方块
+    clearRows: [] // 用于暂存需要删除的行
 }
 
 export default new Vuex.Store({
@@ -26,16 +27,20 @@ export default new Vuex.Store({
             state.curBlock.right(state.matrix)
         },
 
-        fall(state,payload) {
-            if(!state.curBlock.fall(state.matrix, payload.accRowsList)) {
+        fall(state, payload) {
+            if (state.curBlock.fall(state.matrix, payload.accRowsList, state.clearRows)) {
                 // this.gameOver()
-                state.randomBlock = true
+                if (state.clearRows.length == 0) {
+                    state.randomBlock = true
+                }
+                else this.clearFullRows()
             }
+
         },
 
         down(state, payload) {
-            let interval = setInterval(function(){
-                if(!payload.block.down(state.matrix, state.accRowsList)) {
+            let interval = setInterval(function () {
+                if (!payload.block.down(state.matrix, state.accRowsList)) {
                     clearInterval(interval)
 
                     // let shapeColHeight = Array(payload.block.shapeWidth).fill(0)
@@ -54,14 +59,14 @@ export default new Vuex.Store({
                     //         if(block.shape[i][j] && i == 0 ) state.accRowsList[block.pos.y + j] += block.shapeHeight;
                     //         if(block.shape[i][j] && i > 0 && !block.shape[i - 1][j]) state.accRowsList[block.pos.y + j] +=block.shapeHeight - i;
                     //     }
-            
+
                     // }
-                    let accMax = Math.max(state.accRowsList) 
-                    if(accMax > state.matrix) this.gameOver()
+                    let accMax = Math.max(state.accRowsList)
+                    if (accMax > state.matrix) this.gameOver()
 
                     state.randomBlock = true
                 }
-            }, 1000)
+            }, 500)
         },
 
         setCurBlock(state, payload) {
@@ -74,6 +79,27 @@ export default new Vuex.Store({
 
         gameOver(state) {
             state.gameOver = true
+        },
+
+
+        clearFullRows() {
+            const _accRowsList = state.accRowsList
+            let matrix = state.matrix
+            let clearRows = state.clearRows
+
+            let accMax = Math.max(..._accRowsList)
+            let matWidth = matrix[0].length
+            let matLength = matrix.length
+
+            clearRows.forEach(idx => {
+                for (let i = idx; i >= (matLength - accMax) && i <= (matLength - 1); i--) {
+                    matrix[i].splice(0, matWidth, ...matrix[i - 1])
+                }
+            });
+
+            state.accRowsList = _accRowsList.map(element => {
+                return element - 2
+            })
         }
     }
-  })
+})

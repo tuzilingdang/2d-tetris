@@ -96,12 +96,13 @@ class Block {
         return true
     }
 
-    fall(matrix, accRowsList) {
+    fall(matrix, accRowsList, clearRows) {
         const shapeHeight = this.shape.length
         const shapeWidth = this.shape[0].length
         const shape = this.shape
         const prePosX = this.pos.x
         const posY = this.pos.y
+        let matLength = matrix[0].length
         let sliceArr = accRowsList.slice(this.pos.y, this.pos.y + this.shape[0].length)
         let accMax = Math.max(...sliceArr)
         if(accMax > matrix.length) return false
@@ -119,7 +120,6 @@ class Block {
         
         const getPosX = (bottomX, preVal) => {
             let posX = preVal
-
             for(let h = shapeHeight - 1; h >= 0 ; h--) {
                 for(let k = 0; k < shapeWidth; k ++) {
                     if(shape[h][k] && matrix[bottomX] && matrix[bottomX][posY + k]) {
@@ -129,12 +129,9 @@ class Block {
                 }
                 if (posX != preVal) break;
             }
-
             if(posX == preVal && bottomX  <= matrix.length -1 ) {
-                return  getPosX(++bottomX, posX)
-                 
+                return  getPosX(++bottomX, posX)    
             } 
-
             return posX != preVal ? posX : bottomX - shapeHeight;
         }
 
@@ -154,29 +151,12 @@ class Block {
                     accRowsList[posY + j] = shape[i][j] ?  matrix.length - this.pos.x : matrix.length - this.pos.x - 1
                 } 
             }
+            // 检测是否行满
+            let checkLine = matrix[this.pos.x + i].filter(value => { return value == 1})
+            if(checkLine.length == matLength) clearRows.push(this.pos.x + i)
         }
+
         return true
-
-        // for (let i = 0; i < this.shape.length; i++) {
-        //     for (let j = 0; j < this.shape[0].length; j++) {
-        //         matrix[prePosX + i].splice(this.pos.y + j, 1, 0)
-
-        //     }
-        // }
-
-        // for (let i = 0; i < this.shape.length; i++) {
-        //     for (let j = 0; j < this.shape[0].length; j++) {
-        //         matrix[this.pos.x + i].splice(this.pos.y + j, 1, this.shape[i][j])
-
-        //         if(this.shape[i][j] && i == 0 ) {
-        //             accRowsList[this.pos.y + j] += this.shape.length;
-        //         } 
-        //         if(this.shape[i][j] && i > 0 && !this.shape[i - 1][j]){
-        //             accRowsList[this.pos.y + j] +=this.shape.length - i;
-        //         } 
-        //     }
-
-        // }
     }
 
     rotate() {}
