@@ -4,7 +4,8 @@
             <img class="game_over_img" src="../../assets/wilson_pixel_game_over.png" v-if="gameOver" alt="">
             <i class="game_over" v-if="gameOver"></i>
             <div class="screen-grid-area">
-                <div class="square" :class="!gameOver && matrix[parseInt((n-1)/columnNum)][(n-1)%columnNum ] ? 'black':''" v-for="n in columnNum*rowNum" :id="`${parseInt((n-1)/columnNum)}-${(n-1)%columnNum }`" v-bind:key="n">
+                <div class="square" :class="!gameOver && matrix[parseInt((n-1)/columnNum)][(n-1)%columnNum ] ? 'black':''"
+                    v-for="n in columnNum*rowNum" :id="`${parseInt((n-1)/columnNum)}-${(n-1)%columnNum }`" v-bind:key="n">
                     <div class="square-inner"></div>
                 </div>
             </div>
@@ -28,10 +29,14 @@
 </template>
 
 <script>
-    import { mapState } from 'vuex'
+    import {
+        mapState
+    } from 'vuex'
     import Block from '../../block'
     // import func from './vue-temp/vue-editor-bridge';
-    import { BLOCK_INDEX } from '../../const'
+    import {
+        BLOCK_INDEX
+    } from '../../const'
 
     export default {
         name: 'Screen',
@@ -52,12 +57,17 @@
             'matrix',
             'randomBlock',
             'accRowsList',
-            'gameOver'
+            'gameOver',
+            'clearFlag'
         ]),
 
         watch: {
             randomBlock: function (newVal) {
                 if (newVal) this.nextBlock()
+            },
+
+            clearFlag: function(newVal) {
+                if (newVal) this.clearRows()
             }
         },
         created() {
@@ -128,6 +138,12 @@
                 let random = Math.floor(Math.random() * BLOCK_INDEX.length)
                 let type = BLOCK_INDEX[3]
                 return new Block(type)
+            },
+
+            clearRows() {
+                this.$store.commit({
+                    type: 'clear',
+                })
             }
         }
     }

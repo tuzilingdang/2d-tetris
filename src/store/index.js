@@ -11,7 +11,8 @@ const state = {
     accRowsList: Array(12).fill(0), // 已累积行数
     gameOver: false,
     curBlock: {}, // 当前下落的小方块
-    clearRows: [] // 用于暂存需要删除的行
+    clearRows: [], // 用于暂存需要删除的行
+    clearFlag: false
 }
 
 export default new Vuex.Store({
@@ -30,10 +31,10 @@ export default new Vuex.Store({
         fall(state, payload) {
             if (state.curBlock.fall(state.matrix, payload.accRowsList, state.clearRows)) {
                 // this.gameOver()
-                if (state.clearRows.length == 0) {
-                    state.randomBlock = true
-                }
-                else this.clearFullRows()
+                // if (state.clearRows.length == 0) {
+                //     state.randomBlock = true
+                // }
+                if (state.clearRows.length != 0) state.clearFlag = true
             }
 
         },
@@ -82,7 +83,7 @@ export default new Vuex.Store({
         },
 
 
-        clearFullRows() {
+        clear(state) {
             const _accRowsList = state.accRowsList
             let matrix = state.matrix
             let clearRows = state.clearRows
@@ -100,6 +101,8 @@ export default new Vuex.Store({
             state.accRowsList = _accRowsList.map(element => {
                 return element - 2
             })
+            
+            state.clearFlag = false
         }
     }
 })
