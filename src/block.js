@@ -72,14 +72,60 @@ class Block {
         return true
     }
 
-    down(matrix) {
+    down(matrix, accRowsList, clearRows) {
         // if(this.pos.x + 1 > matrix.length - this.shape.length - accRows) return false
+        const shapeHeight = this.shape.length
+        const shapeWidth = this.shape[0].length
+        const shape = this.shape
+        const posY = this.pos.y
+        const matLength = matrix[0].length
 
-        if (this.pos.x + 1 > matrix.length - this.shape.length) return false
-        // if(matrix[this.pos.x + this.shape.length].includes(1)) return false
-        for (let i = 0; i < this.shape[0].length; i++) {
-            if (matrix[this.pos.x + this.shape.length][this.pos.y + i] == 1) return false
+        // 判断是否落到底部
+        if (this.pos.x + 1 > matrix.length - this.shape.length) {
+            // for(let i = 0; i < shapeHeight; i ++ ) {
+            //     for(let j = 0;  j < shapeWidth; j++) {
+            //         if(i == 0)  {
+            //             accRowsList[posY + j] = shape[i][j] ?  matrix.length - this.pos.x : matrix.length - this.pos.x - 1
+            //         } 
+            //     }
+            //     // 检测是否行满
+            //     let checkLine = matrix[this.pos.x + i].filter(value => { return value == 1})
+            //     if(checkLine.length == matLength) clearRows.push(this.pos.x + i)
+            // }
+
+            return false
         }
+        // if(matrix[this.pos.x + this.shape.length].includes(1)) return false
+            // for(let i = 0; i < shapeHeight; i ++ ) {
+                for(let j = 0;  j < shapeWidth; j++) {
+                    // if(i == 0)  {
+                        // accRowsList[posY + j] = shape[i][j] ? accRowsList[posY + j] + 1 : accRowsList[posY + j]
+                    // } 
+                    if (matrix[this.pos.x + this.shape.length][this.pos.y + j] == 1 && shape[shapeHeight -1 ][j] ) {
+                        for(let i = 0; i < shapeHeight; i ++  ) {
+                            accRowsList[posY + j] = shape[i][j] ? accRowsList[posY + j] + 1 : accRowsList[posY + j]
+                            // 检测是否行满
+                            if(this.pos.x + i > -1) {
+                                let checkLine = matrix[this.pos.x + i].filter(value => { return value == 1})
+                                if(checkLine.length == matLength) clearRows.push(this.pos.x + i)
+                            }
+                        }
+                        return false
+                    }
+                }
+                // // 检测是否行满
+                // if(this.pos.x + i > -1) {
+                //     let checkLine = matrix[this.pos.x + i].filter(value => { return value == 1})
+                //     if(checkLine.length == matLength) clearRows.push(this.pos.x + i)
+                // }
+            // }
+
+        // for (let i = 0; i < this.shape[0].length; i++) {
+        //     if (matrix[this.pos.x + this.shape.length][this.pos.y + i] == 1) {
+        //         accMax[0] = matrix.length - this.pos.x 
+        //         return false
+        //     }
+        // }
         this.pos.x++;
 
         if (this.pos.x - 1 >= 0) {
@@ -89,7 +135,8 @@ class Block {
 
         for (let i = 0; i < this.shape.length; i++) {
             for (let j = 0; j < this.shape[i].length; j++) {
-                matrix[this.pos.x + i].splice(this.pos.y + j, 1, this.shape[i][j])
+                const newVal = i == this.shape.length - 1 ? this.shape[i][j]|| matrix[this.pos.x + i][this.pos.y + j] : this.shape[i][j]
+                matrix[this.pos.x + i].splice(this.pos.y + j, 1, newVal)
             }
         }
 

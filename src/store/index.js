@@ -8,11 +8,13 @@ const state = {
     rowNum: 22,
     matrix: [],
     randomBlock: false, // 是否获取随机形状
-    accRowsList: Array(12).fill(0), // 已累积行数
+    accRowsList: Array(12).fill(0), // 累计直方图
+    accMax: [],  // 已累积行数
     gameOver: false,
     curBlock: {}, // 当前下落的小方块
     clearRows: [], // 用于暂存需要删除的行
-    clearFlag: false
+    clearFlag: false,
+    interval:{}
 }
 
 export default new Vuex.Store({
@@ -31,18 +33,18 @@ export default new Vuex.Store({
         fall(state, payload) {
             if (state.curBlock.fall(state.matrix, payload.accRowsList, state.clearRows)) {
                 // this.gameOver()
-                // if (state.clearRows.length == 0) {
-                //     state.randomBlock = true
-                // }
+                if (state.clearRows.length == 0) {
+                    state.randomBlock = true
+                }
                 if (state.clearRows.length != 0) state.clearFlag = true
             }
 
         },
 
         down(state, payload) {
-            let interval = setInterval(function () {
-                if (!payload.block.down(state.matrix, state.accRowsList)) {
-                    clearInterval(interval)
+            state.interval = setInterval(function () {
+                if (!payload.block.down(state.matrix, state.accRowsList, state.clearRows)) {
+                    clearInterval(state.interval)
 
                     // let shapeColHeight = Array(payload.block.shapeWidth).fill(0)
                     // for(let i = 0; i < payload.block.shapeWidth; i ++) {
@@ -62,12 +64,16 @@ export default new Vuex.Store({
                     //     }
 
                     // }
-                    let accMax = Math.max(state.accRowsList)
+                    let accMax = Math.max(...state.accRowsList)
                     if (accMax > state.matrix) this.gameOver()
 
                     state.randomBlock = true
                 }
-            }, 500)
+            }, 200)
+        },
+
+        stopDowm(state) {
+            clearInterval(state.interval)
         },
 
         setCurBlock(state, payload) {
@@ -81,7 +87,6 @@ export default new Vuex.Store({
         gameOver(state) {
             state.gameOver = true
         },
-
 
         clear(state) {
             const _accRowsList = state.accRowsList
@@ -99,9 +104,10 @@ export default new Vuex.Store({
             });
 
             state.accRowsList = _accRowsList.map(element => {
-                return element - 2
+                return element - clearRows.length
             })
             
+            state.clearRows = []
             state.clearFlag = false
         }
     }

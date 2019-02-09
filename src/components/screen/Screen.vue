@@ -66,8 +66,13 @@
                 if (newVal) this.nextBlock()
             },
 
-            clearFlag: function(newVal) {
-                if (newVal) this.clearRows()
+            clearFlag: function (newVal) {
+                if (newVal) {
+                    setTimeout(() => {
+                        this.clearRows()
+                        this.nextBlock()
+                    },1000)
+                }
             }
         },
         created() {
@@ -99,7 +104,8 @@
             },
 
             nextBlock() {
-                if (this.accRows > this.rowNum) {
+                const accMax = Math.max(...this.accRowsList)
+                if (accMax >= this.rowNum) {
                     this.$store.commit('gameOver')
                     return
                 }
@@ -136,7 +142,7 @@
 
             getRandomBlock() {
                 let random = Math.floor(Math.random() * BLOCK_INDEX.length)
-                let type = BLOCK_INDEX[3]
+                let type = BLOCK_INDEX[random]
                 return new Block(type)
             },
 

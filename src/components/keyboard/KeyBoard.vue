@@ -70,6 +70,10 @@
 
             fall() {
                 this.$store.commit({
+                    type:'stopDowm'
+                })
+
+                this.$store.commit({
                     type: 'fall',
                     accRowsList: this.accRowsList
                 })
