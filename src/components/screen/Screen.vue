@@ -68,10 +68,11 @@
 
             clearFlag: function (newVal) {
                 if (newVal) {
+                    this.stopDown()
                     setTimeout(() => {
                         this.clearRows()
                         this.nextBlock()
-                    },1000)
+                    }, 1000)
                 }
             }
         },
@@ -142,13 +143,19 @@
 
             getRandomBlock() {
                 let random = Math.floor(Math.random() * BLOCK_INDEX.length)
-                let type = BLOCK_INDEX[random]
+                let type = BLOCK_INDEX[3]
                 return new Block(type)
             },
 
             clearRows() {
                 this.$store.commit({
                     type: 'clear',
+                })
+            },
+
+            stopDown() {
+                this.$store.commit({
+                    type: 'stopDowm'
                 })
             }
         }

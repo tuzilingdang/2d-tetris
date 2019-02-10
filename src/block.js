@@ -81,7 +81,7 @@ class Block {
         const matLength = matrix[0].length
 
         // 判断是否落到底部
-        if (this.pos.x + 1 > matrix.length - this.shape.length) {
+        // if (this.pos.x + 1 > matrix.length - this.shape.length) {
             // for(let i = 0; i < shapeHeight; i ++ ) {
             //     for(let j = 0;  j < shapeWidth; j++) {
             //         if(i == 0)  {
@@ -93,15 +93,15 @@ class Block {
             //     if(checkLine.length == matLength) clearRows.push(this.pos.x + i)
             // }
 
-            return false
-        }
+        //     return false
+        // }
         // if(matrix[this.pos.x + this.shape.length].includes(1)) return false
             // for(let i = 0; i < shapeHeight; i ++ ) {
                 for(let j = 0;  j < shapeWidth; j++) {
                     // if(i == 0)  {
                         // accRowsList[posY + j] = shape[i][j] ? accRowsList[posY + j] + 1 : accRowsList[posY + j]
                     // } 
-                    if (matrix[this.pos.x + this.shape.length][this.pos.y + j] == 1 && shape[shapeHeight -1 ][j] ) {
+                    if ( (this.pos.x + this.shape.length) == matrix.length || (matrix[this.pos.x + this.shape.length][this.pos.y + j] == 1 && shape[shapeHeight -1 ][j])) {
                         for(let i = 0; i < shapeHeight; i ++  ) {
                             accRowsList[posY + j] = shape[i][j] ? accRowsList[posY + j] + 1 : accRowsList[posY + j]
                             // 检测是否行满
@@ -110,7 +110,7 @@ class Block {
                                 if(checkLine.length == matLength) clearRows.push(this.pos.x + i)
                             }
                         }
-                        return false
+                        if(j == shapeWidth - 1 ) return false
                     }
                 }
                 // // 检测是否行满

@@ -66,6 +66,7 @@ export default new Vuex.Store({
                     // }
                     let accMax = Math.max(...state.accRowsList)
                     if (accMax > state.matrix) this.gameOver()
+                    if (state.clearRows.length != 0) state.clearFlag = true
 
                     state.randomBlock = true
                 }
