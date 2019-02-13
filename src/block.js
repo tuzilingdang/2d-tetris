@@ -15,7 +15,7 @@ class Block {
         case 'T':
             this.pos = { x: -1, y: 4, accRows: 0 }
             break
-            
+
         case 'I':
         case 'O':
             this.pos = { x: -1, y: 5, accRows: 0 }
@@ -70,6 +70,53 @@ class Block {
         }
 
         return true
+    }
+
+    rotate(matrix) {
+        for (let i = 0; i < this.shape.length; i++) {
+            for (let j = 0; j < this.shape[i].length; j++) {
+                matrix[this.pos.x + i].splice(this.pos.y + j, 1, 0)
+            }
+        }
+
+        const rotateClockWise = (mat) => {
+            if (!mat && mat.length == 0 && mat[0].length == 0) return
+
+            const n = mat[0].length;
+            const m = mat.length;
+            const max = n > m ? n : m
+        
+            for (let i = 0; i < m / 2; i++) {
+                for (let j = 0; j < n; j++) {
+                    let temp = mat[i][j]
+                    mat[i][j] = mat[m - i - 1][j]
+                    mat[m - i - 1][j] = temp
+                }
+            }
+            for (let i = 0; i < max; i++) {
+                if (i < m) {
+                    for (let j = i + 1; j < max; j++) {
+                        let temp = mat[i] && (mat[i][j]!= undefined) ? mat[i][j] : null;
+                        if (mat[j] && (mat[j][i]!=undefined)) mat[i][j] = mat[j][i];
+                        if (temp || temp == 0) {
+                            if (!mat[j]) mat[j] = Array(n).fill(null)
+                            mat[j][i] = temp
+                        }
+                    }
+                }
+                if (n > m) mat[i].splice(m, n - m)
+            }
+            if (m > n) mat = mat.slice(0, n)
+        
+            return mat
+        }
+        this.shape = rotateClockWise(this.shape)
+
+        for (let i = 0; i < this.shape.length; i++) {
+            for (let j = 0; j < this.shape[i].length; j++) {
+                matrix[this.pos.x + i].splice(this.pos.y + j, 1, this.shape[i][j])
+            }
+        }
     }
 
     down(matrix, accRowsList, clearRows) {
@@ -205,8 +252,6 @@ class Block {
 
         return true
     }
-
-    rotate() {}
 
     get_d1_matrix(matrix) {
         matrix[2] = 1;

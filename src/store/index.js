@@ -30,6 +30,10 @@ export default new Vuex.Store({
             state.curBlock.right(state.matrix)
         },
 
+        rotate(state) {
+            state.curBlock.rotate(state.matrix)
+        },
+
         fall(state, payload) {
             if (state.curBlock.fall(state.matrix, payload.accRowsList, state.clearRows)) {
                 // this.gameOver()
@@ -41,9 +45,9 @@ export default new Vuex.Store({
 
         },
 
-        down(state, payload) {
+        down(state) {
             state.interval = setInterval(function () {
-                if (!payload.block.down(state.matrix, state.accRowsList, state.clearRows)) {
+                if (!state.curBlock.down(state.matrix, state.accRowsList, state.clearRows)) {
                     clearInterval(state.interval)
 
                     // let shapeColHeight = Array(payload.block.shapeWidth).fill(0)
@@ -70,7 +74,7 @@ export default new Vuex.Store({
 
                     state.randomBlock = true
                 }
-            }, 200)
+            }, 1000)
         },
 
         stopDowm(state) {

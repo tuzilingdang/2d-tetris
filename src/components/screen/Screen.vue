@@ -143,7 +143,7 @@
 
             getRandomBlock() {
                 let random = Math.floor(Math.random() * BLOCK_INDEX.length)
-                let type = BLOCK_INDEX[3]
+                let type = BLOCK_INDEX[random]
                 return new Block(type)
             },
 

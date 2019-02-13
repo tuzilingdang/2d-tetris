@@ -10,12 +10,12 @@
             <div class="arrows">
                 <div class="left" @click="left"></div>
                 <div class="right" @click="right"></div>
-                <div class="up" ></div>
+                <div class="up" @click="rotate"></div>
                 <div class="down" @click="fall"></div>
             </div>
 
-            <div class="rotate" >
-                <div class="rotate-btn" @click="start" ></div>
+            <div class="rotate">
+                <div class="rotate-btn" @click="start"></div>
                 <span>旋转</span>
             </div>
 
@@ -56,7 +56,7 @@
                 alert('start')
             },
 
-            left: function(){
+            left: function () {
                 this.$store.commit({
                     type: 'left',
                 })
@@ -68,9 +68,23 @@
                 })
             },
 
+            rotate() {
+                this.$store.commit({
+                    type: 'stopDowm'
+                })
+
+                this.$store.commit({
+                    type: 'rotate',
+                })
+
+                this.$store.commit({
+                    type: 'down',
+                })
+            },
+
             fall() {
                 this.$store.commit({
-                    type:'stopDowm'
+                    type: 'stopDowm'
                 })
 
                 this.$store.commit({
