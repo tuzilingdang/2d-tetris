@@ -1,28 +1,49 @@
-import { BLOCK_TYPE } from './const'
+import {
+    BLOCK_TYPE
+} from './const'
 
+function deepClone(obj) {
+    var out = [],
+        i = 0,
+        len = obj.length;
+    for (; i < len; i++) {
+        if (obj[i] instanceof Array) {
+            out[i] = deepClone(obj[i]);
+        } else out[i] = obj[i];
+    }
+    return out;
+}
 class Block {
     constructor(type) {
         if (!type) return
 
         this.type = type;
-        this.shape = BLOCK_TYPE[type]
+        this.shape = deepClone(BLOCK_TYPE[type])
 
         switch (type) {
-        case 'L':
-        case 'J':
-        case 'Z':
-        case 'S':
-        case 'T':
-            this.pos = { x: -1, y: 4, accRows: 0 }
-            break
+            case 'L':
+            case 'J':
+            case 'Z':
+            case 'S':
+            case 'T':
+                this.pos = {
+                    x: -1,
+                    y: 4,
+                    accRows: 0
+                }
+                break
 
-        case 'I':
-        case 'O':
-            this.pos = { x: -1, y: 5, accRows: 0 }
-            break
+            case 'I':
+            case 'O':
+                this.pos = {
+                    x: -1,
+                    y: 5,
+                    accRows: 0
+                }
+                break
 
-        default:
-            break
+            default:
+                break
         }
     }
 
@@ -85,7 +106,7 @@ class Block {
             const n = mat[0].length;
             const m = mat.length;
             const max = n > m ? n : m
-        
+
             for (let i = 0; i < m / 2; i++) {
                 for (let j = 0; j < n; j++) {
                     let temp = mat[i][j]
@@ -96,8 +117,8 @@ class Block {
             for (let i = 0; i < max; i++) {
                 if (i < m) {
                     for (let j = i + 1; j < max; j++) {
-                        let temp = mat[i] && (mat[i][j]!= undefined) ? mat[i][j] : null;
-                        if (mat[j] && (mat[j][i]!=undefined)) mat[i][j] = mat[j][i];
+                        let temp = mat[i] && (mat[i][j] != undefined) ? mat[i][j] : null;
+                        if (mat[j] && (mat[j][i] != undefined)) mat[i][j] = mat[j][i];
                         if (temp || temp == 0) {
                             if (!mat[j]) mat[j] = Array(n).fill(null)
                             mat[j][i] = temp
@@ -107,7 +128,7 @@ class Block {
                 if (n > m) mat[i].splice(m, n - m)
             }
             if (m > n) mat = mat.slice(0, n)
-        
+
             return mat
         }
         this.shape = rotateClockWise(this.shape)
@@ -126,46 +147,65 @@ class Block {
         const shape = this.shape
         const posY = this.pos.y
         const matLength = matrix[0].length
+        let shapeAcc = []
 
         // 判断是否落到底部
         // if (this.pos.x + 1 > matrix.length - this.shape.length) {
-            // for(let i = 0; i < shapeHeight; i ++ ) {
-            //     for(let j = 0;  j < shapeWidth; j++) {
-            //         if(i == 0)  {
-            //             accRowsList[posY + j] = shape[i][j] ?  matrix.length - this.pos.x : matrix.length - this.pos.x - 1
-            //         } 
-            //     }
-            //     // 检测是否行满
-            //     let checkLine = matrix[this.pos.x + i].filter(value => { return value == 1})
-            //     if(checkLine.length == matLength) clearRows.push(this.pos.x + i)
-            // }
+        // for(let i = 0; i < shapeHeight; i ++ ) {
+        //     for(let j = 0;  j < shapeWidth; j++) {
+        //         if(i == 0)  {
+        //             accRowsList[posY + j] = shape[i][j] ?  matrix.length - this.pos.x : matrix.length - this.pos.x - 1
+        //         } 
+        //     }
+        //     // 检测是否行满
+        //     let checkLine = matrix[this.pos.x + i].filter(value => { return value == 1})
+        //     if(checkLine.length == matLength) clearRows.push(this.pos.x + i)
+        // }
 
         //     return false
         // }
         // if(matrix[this.pos.x + this.shape.length].includes(1)) return false
-            // for(let i = 0; i < shapeHeight; i ++ ) {
-                for(let j = 0;  j < shapeWidth; j++) {
-                    // if(i == 0)  {
-                        // accRowsList[posY + j] = shape[i][j] ? accRowsList[posY + j] + 1 : accRowsList[posY + j]
-                    // } 
-                    if ( (this.pos.x + this.shape.length) == matrix.length || (matrix[this.pos.x + this.shape.length][this.pos.y + j] == 1 && shape[shapeHeight -1 ][j])) {
-                        for(let i = 0; i < shapeHeight; i ++  ) {
-                            accRowsList[posY + j] = shape[i][j] ? accRowsList[posY + j] + 1 : accRowsList[posY + j]
-                            // 检测是否行满
-                            if(this.pos.x + i > -1) {
-                                let checkLine = matrix[this.pos.x + i].filter(value => { return value == 1})
-                                if(checkLine.length == matLength) clearRows.push(this.pos.x + i)
-                            }
-                        }
-                        if(j == shapeWidth - 1 ) return false
+        // for(let i = 0; i < shapeHeight; i ++ ) {
+        let crashType = ''
+        for (let j = 0; j < shapeWidth; j++) {
+            // if(i == 0)  {
+            // accRowsList[posY + j] = shape[i][j] ? accRowsList[posY + j] + 1 : accRowsList[posY + j]
+            // } 
+            // if ( (this.pos.x + this.shape.length) == matrix.length || (matrix[this.pos.x + this.shape.length][this.pos.y + j] == 1 && shape[shapeHeight -1 ][j])) {
+            const attatchBottom = (this.pos.x + this.shape.length) >= matrix.length
+            const blockCrash = matrix[this.pos.x + this.shape.length] && matrix[this.pos.x + this.shape.length][this.pos.y + j] && this.shape[shapeHeight - 1][j]
+            if (attatchBottom || blockCrash) {
+                for (let i = 0; i < shapeHeight; i++) {
+                    // accRowsList[posY + j] = shape[i][j] ? accRowsList[posY + j] + shapeHeight - i : accRowsList[posY + j]
+                    // if(!shapeAcc[j] && shape[i][j]) shapeAcc[j] = shapeHeight - i
+                    // 检测是否行满
+                    if (this.pos.x + i > -1) {
+                        let checkLine = matrix[this.pos.x + i].filter(value => {
+                            return value == 1
+                        })
+                        if (checkLine.length == matLength) clearRows.push(this.pos.x + i)
                     }
                 }
-                // // 检测是否行满
-                // if(this.pos.x + i > -1) {
-                //     let checkLine = matrix[this.pos.x + i].filter(value => { return value == 1})
-                //     if(checkLine.length == matLength) clearRows.push(this.pos.x + i)
-                // }
-            // }
+                // accRowsList[posY + j] = accRowsList[posY + j] + shapeAcc[j] 
+                // if(j == shapeWidth - 1 ) return false
+                crashType = blockCrash ? 'blockCrash' : 'attatchBottom'
+            }
+        }
+        if (crashType) {
+            for (let j = 0; j < shapeWidth; j++) {
+                for (let i = 0; i < shapeHeight; i++) {
+                    if (!shapeAcc[j] && shape[i][j]) shapeAcc[j] = shapeHeight - i
+                }
+                accRowsList[posY + j] = crashType == 'blockCrash' ? matrix.length - this.pos.x - shapeHeight + shapeAcc[j] : accRowsList[posY + j] + shapeAcc[j]
+            }
+            return false
+        }
+        // // 检测是否行满
+        // if(this.pos.x + i > -1) {
+        //     let checkLine = matrix[this.pos.x + i].filter(value => { return value == 1})
+        //     if(checkLine.length == matLength) clearRows.push(this.pos.x + i)
+        // }
+        // }
 
         // for (let i = 0; i < this.shape[0].length; i++) {
         //     if (matrix[this.pos.x + this.shape.length][this.pos.y + i] == 1) {
@@ -182,7 +222,7 @@ class Block {
 
         for (let i = 0; i < this.shape.length; i++) {
             for (let j = 0; j < this.shape[i].length; j++) {
-                const newVal = i == this.shape.length - 1 ? this.shape[i][j]|| matrix[this.pos.x + i][this.pos.y + j] : this.shape[i][j]
+                const newVal = i == this.shape.length - 1 ? this.shape[i][j] || matrix[this.pos.x + i][this.pos.y + j] : this.shape[i][j]
                 matrix[this.pos.x + i].splice(this.pos.y + j, 1, newVal)
             }
         }
@@ -199,7 +239,7 @@ class Block {
         let matLength = matrix[0].length
         let sliceArr = accRowsList.slice(this.pos.y, this.pos.y + this.shape[0].length)
         let accMax = Math.max(...sliceArr)
-        if(accMax > matrix.length) return false
+        if (accMax > matrix.length) return false
         // let prePosX = this.pos.x
 
         // this.pos.x = matrix.length - this.shape.length - accMax
@@ -211,21 +251,21 @@ class Block {
         //         break;
         //     }
         // }
-        
+
         const getPosX = (bottomX, preVal) => {
             let posX = preVal
-            for(let h = shapeHeight - 1; h >= 0 ; h--) {
-                for(let k = 0; k < shapeWidth; k ++) {
-                    if(shape[h][k] && matrix[bottomX] && matrix[bottomX][posY + k]) {
+            for (let h = shapeHeight - 1; h >= 0; h--) {
+                for (let k = 0; k < shapeWidth; k++) {
+                    if (shape[h][k] && matrix[bottomX] && matrix[bottomX][posY + k]) {
                         posX = bottomX - h - 1;
                         break;
                     }
                 }
                 if (posX != preVal) break;
             }
-            if(posX == preVal && bottomX  <= matrix.length -1 ) {
-                return  getPosX(++bottomX, posX)    
-            } 
+            if (posX == preVal && bottomX <= matrix.length - 1) {
+                return getPosX(++bottomX, posX)
+            }
             return posX != preVal ? posX : bottomX - shapeHeight;
         }
 
@@ -235,19 +275,21 @@ class Block {
 
         this.pos.x = getPosX(matrix.length - accMax - 1, this.pos.x)
 
-        for(let i = 0; i < shapeHeight; i ++ ) {
-            for(let j = 0;  j < shapeWidth; j++) {
-                if(!(matrix[this.pos.x + i] && matrix[this.pos.x + i][posY + j])) {
+        for (let i = 0; i < shapeHeight; i++) {
+            for (let j = 0; j < shapeWidth; j++) {
+                if (!(matrix[this.pos.x + i] && matrix[this.pos.x + i][posY + j])) {
                     matrix[this.pos.x + i].splice(posY + j, 1, shape[i][j])
                 }
                 matrix[prePosX + i].splice(posY + j, 1, 0)
-                if(i == 0)  {
-                    accRowsList[posY + j] = shape[i][j] ?  matrix.length - this.pos.x : matrix.length - this.pos.x - 1
-                } 
+                if (i == 0) {
+                    accRowsList[posY + j] = shape[i][j] ? matrix.length - this.pos.x : matrix.length - this.pos.x - 1
+                }
             }
             // 检测是否行满
-            let checkLine = matrix[this.pos.x + i].filter(value => { return value == 1})
-            if(checkLine.length == matLength) clearRows.push(this.pos.x + i)
+            let checkLine = matrix[this.pos.x + i].filter(value => {
+                return value == 1
+            })
+            if (checkLine.length == matLength) clearRows.push(this.pos.x + i)
         }
 
         return true
