@@ -1,9 +1,9 @@
 export const BLOCK_TYPE = {
-    L: [
+    J: [
         [0, 0, 1],
         [1, 1, 1]
     ],
-    J: [
+    L: [
         [1, 0, 0],
         [1, 1, 1]
     ],
@@ -29,4 +29,4 @@ export const BLOCK_TYPE = {
 
 }
 
-export const BLOCK_INDEX = ['L', 'I', 'Z', 'O', 'S', 'T']
+export const BLOCK_INDEX = ['J','L', 'I', 'Z', 'O', 'S', 'T']

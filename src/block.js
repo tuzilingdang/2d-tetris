@@ -2,17 +2,6 @@ import {
     BLOCK_TYPE
 } from './const'
 
-function deepClone(obj) {
-    var out = [],
-        i = 0,
-        len = obj.length;
-    for (; i < len; i++) {
-        if (obj[i] instanceof Array) {
-            out[i] = deepClone(obj[i]);
-        } else out[i] = obj[i];
-    }
-    return out;
-}
 class Block {
     constructor(type) {
         if (!type) return
@@ -54,22 +43,17 @@ class Block {
         return this.shape.length
     }
 
-    // get shape() {
-    //     return this._shape
-    // }
-
     left(matrix) {
         if (this.pos.y - 1 < 0) return false
         this.pos.y--;
-        // if(this.pos.y > matrix[0].length - this.shape[0].length) return false
 
         for (let i = 0; i < this.shape.length; i++) {
-            matrix[this.pos.x + i].splice(this.pos.y + this.shape[0].length, 1, 0)
+            matrix[this.pos.x + i] && matrix[this.pos.x + i].splice(this.pos.y + this.shape[0].length, 1, 0)
         }
 
         for (let i = 0; i < this.shape.length; i++) {
             for (let j = 0; j < this.shape[i].length; j++) {
-                matrix[this.pos.x + i].splice(this.pos.y + j, 1, this.shape[i][j])
+                matrix[this.pos.x + i] && matrix[this.pos.x + i].splice(this.pos.y + j, 1, this.shape[i][j])
             }
         }
 
@@ -81,12 +65,12 @@ class Block {
         // if(this.pos.y > matrix[0].length - this.shape[0].length) return false
 
         for (let i = 0; i < this.shape.length; i++) {
-            matrix[this.pos.x + i].splice(this.pos.y - 1, 1, 0)
+            matrix[this.pos.x + i] && matrix[this.pos.x + i].splice(this.pos.y - 1, 1, 0)
         }
 
         for (let i = 0; i < this.shape.length; i++) {
             for (let j = 0; j < this.shape[i].length; j++) {
-                matrix[this.pos.x + i].splice(this.pos.y + j, 1, this.shape[i][j])
+                matrix[this.pos.x + i] && matrix[this.pos.x + i].splice(this.pos.y + j, 1, this.shape[i][j])
             }
         }
 
@@ -96,7 +80,7 @@ class Block {
     rotate(matrix) {
         for (let i = 0; i < this.shape.length; i++) {
             for (let j = 0; j < this.shape[i].length; j++) {
-                matrix[this.pos.x + i].splice(this.pos.y + j, 1, 0)
+                matrix[this.pos.x + i] && matrix[this.pos.x + i].splice(this.pos.y + j, 1, 0)
             }
         }
 
@@ -135,59 +119,33 @@ class Block {
 
         for (let i = 0; i < this.shape.length; i++) {
             for (let j = 0; j < this.shape[i].length; j++) {
-                matrix[this.pos.x + i].splice(this.pos.y + j, 1, this.shape[i][j])
+                matrix[this.pos.x + i] && matrix[this.pos.x + i].splice(this.pos.y + j, 1, this.shape[i][j])
             }
         }
     }
 
     down(matrix, accRowsList, clearRows) {
-        // if(this.pos.x + 1 > matrix.length - this.shape.length - accRows) return false
         const shapeHeight = this.shape.length
         const shapeWidth = this.shape[0].length
         const shape = this.shape
         const posY = this.pos.y
         const matLength = matrix[0].length
         let shapeAcc = []
-
-        // 判断是否落到底部
-        // if (this.pos.x + 1 > matrix.length - this.shape.length) {
-        // for(let i = 0; i < shapeHeight; i ++ ) {
-        //     for(let j = 0;  j < shapeWidth; j++) {
-        //         if(i == 0)  {
-        //             accRowsList[posY + j] = shape[i][j] ?  matrix.length - this.pos.x : matrix.length - this.pos.x - 1
-        //         } 
-        //     }
-        //     // 检测是否行满
-        //     let checkLine = matrix[this.pos.x + i].filter(value => { return value == 1})
-        //     if(checkLine.length == matLength) clearRows.push(this.pos.x + i)
-        // }
-
-        //     return false
-        // }
-        // if(matrix[this.pos.x + this.shape.length].includes(1)) return false
-        // for(let i = 0; i < shapeHeight; i ++ ) {
         let crashType = ''
+
         for (let j = 0; j < shapeWidth; j++) {
-            // if(i == 0)  {
-            // accRowsList[posY + j] = shape[i][j] ? accRowsList[posY + j] + 1 : accRowsList[posY + j]
-            // } 
-            // if ( (this.pos.x + this.shape.length) == matrix.length || (matrix[this.pos.x + this.shape.length][this.pos.y + j] == 1 && shape[shapeHeight -1 ][j])) {
             const attatchBottom = (this.pos.x + this.shape.length) >= matrix.length
             const blockCrash = matrix[this.pos.x + this.shape.length] && matrix[this.pos.x + this.shape.length][this.pos.y + j] && this.shape[shapeHeight - 1][j]
             if (attatchBottom || blockCrash) {
                 for (let i = 0; i < shapeHeight; i++) {
-                    // accRowsList[posY + j] = shape[i][j] ? accRowsList[posY + j] + shapeHeight - i : accRowsList[posY + j]
-                    // if(!shapeAcc[j] && shape[i][j]) shapeAcc[j] = shapeHeight - i
                     // 检测是否行满
                     if (this.pos.x + i > -1) {
-                        let checkLine = matrix[this.pos.x + i].filter(value => {
+                        let checkLine = matrix[this.pos.x + i] && matrix[this.pos.x + i].filter(value => {
                             return value == 1
                         })
                         if (checkLine.length == matLength) clearRows.push(this.pos.x + i)
                     }
                 }
-                // accRowsList[posY + j] = accRowsList[posY + j] + shapeAcc[j] 
-                // if(j == shapeWidth - 1 ) return false
                 crashType = blockCrash ? 'blockCrash' : 'attatchBottom'
             }
         }
@@ -200,30 +158,16 @@ class Block {
             }
             return false
         }
-        // // 检测是否行满
-        // if(this.pos.x + i > -1) {
-        //     let checkLine = matrix[this.pos.x + i].filter(value => { return value == 1})
-        //     if(checkLine.length == matLength) clearRows.push(this.pos.x + i)
-        // }
-        // }
 
-        // for (let i = 0; i < this.shape[0].length; i++) {
-        //     if (matrix[this.pos.x + this.shape.length][this.pos.y + i] == 1) {
-        //         accMax[0] = matrix.length - this.pos.x 
-        //         return false
-        //     }
-        // }
         this.pos.x++;
-
         if (this.pos.x - 1 >= 0) {
             for (let i = 0; i < this.shape[0].length; i++)
                 matrix[this.pos.x - 1].splice(this.pos.y + i, 1, 0)
         }
-
         for (let i = 0; i < this.shape.length; i++) {
             for (let j = 0; j < this.shape[i].length; j++) {
                 const newVal = i == this.shape.length - 1 ? this.shape[i][j] || matrix[this.pos.x + i][this.pos.y + j] : this.shape[i][j]
-                matrix[this.pos.x + i].splice(this.pos.y + j, 1, newVal)
+                matrix[this.pos.x + i] && matrix[this.pos.x + i].splice(this.pos.y + j, 1, newVal)
             }
         }
 
@@ -240,17 +184,6 @@ class Block {
         let sliceArr = accRowsList.slice(this.pos.y, this.pos.y + this.shape[0].length)
         let accMax = Math.max(...sliceArr)
         if (accMax > matrix.length) return false
-        // let prePosX = this.pos.x
-
-        // this.pos.x = matrix.length - this.shape.length - accMax
-        // let bottomX = matrix.length - accMax
-
-        // for(let k = 0; k < shapeWidth; k ++) {
-        //     if(this.shape[shapeHeight - 1][k] && matrix[bottomX][k]) {
-        //         this.pos.x = bottomX - shapeWidth;
-        //         break;
-        //     }
-        // }
 
         const getPosX = (bottomX, preVal) => {
             let posX = preVal
@@ -269,24 +202,20 @@ class Block {
             return posX != preVal ? posX : bottomX - shapeHeight;
         }
 
-        // const getPosX = (bottomX, preVal) => {
-        //     if(bottomX  <= matrix.length -1 ) 
-        // }
-
         this.pos.x = getPosX(matrix.length - accMax - 1, this.pos.x)
 
         for (let i = 0; i < shapeHeight; i++) {
             for (let j = 0; j < shapeWidth; j++) {
                 if (!(matrix[this.pos.x + i] && matrix[this.pos.x + i][posY + j])) {
-                    matrix[this.pos.x + i].splice(posY + j, 1, shape[i][j])
+                    matrix[this.pos.x + i] && matrix[this.pos.x + i].splice(posY + j, 1, shape[i][j])
                 }
-                matrix[prePosX + i].splice(posY + j, 1, 0)
+                matrix[prePosX + i] && matrix[prePosX + i].splice(posY + j, 1, 0)
                 if (i == 0) {
                     accRowsList[posY + j] = shape[i][j] ? matrix.length - this.pos.x : matrix.length - this.pos.x - 1
                 }
             }
             // 检测是否行满
-            let checkLine = matrix[this.pos.x + i].filter(value => {
+            let checkLine = matrix[this.pos.x + i] && matrix[this.pos.x + i].filter(value => {
                 return value == 1
             })
             if (checkLine.length == matLength) clearRows.push(this.pos.x + i)
@@ -294,10 +223,18 @@ class Block {
 
         return true
     }
-
-    get_d1_matrix(matrix) {
-        matrix[2] = 1;
-    }
 }
 
 export default Block
+
+function deepClone(obj) {
+    var out = [],
+        i = 0,
+        len = obj.length;
+    for (; i < len; i++) {
+        if (obj[i] instanceof Array) {
+            out[i] = deepClone(obj[i]);
+        } else out[i] = obj[i];
+    }
+    return out;
+}

@@ -1,76 +1,186 @@
 <template>
     <div class="keyboard">
-        <div class="top-buttons">
-            <div class="on"></div>
-            <div class="pause"></div>
-            <div class="music"></div>
+        <div class="top-btn">
+            <div class="top-btn-item">
+                <span class="top-btn-item-txt" @click="reset">RESET</span>
+            </div>
+            <div class="top-btn-item">
+                <span class="top-btn-item-txt" @click="pause">PAUSE</span>
+            </div>
+            <div class="top-btn-item">
+                <span class="top-btn-item-txt">SOUND</span>
+            </div>
+            <div class="top-btn-item">
+                <span class="top-btn-item-txt" @click="onAndOff">ON/OFF</span>
+            </div>
         </div>
 
-        <div class="bottom-buttons">
-            <div class="arrows">
+        <div class="bottom-btn">
+            <div class="bottom-btn-arrows">
                 <div class="left" @click="left"></div>
                 <div class="right" @click="right"></div>
                 <div class="up" @click="rotate"></div>
                 <div class="down" @click="fall"></div>
             </div>
-
-            <div class="rotate">
-                <div class="rotate-btn" @click="start"></div>
-                <span>旋转</span>
+            <div class="bottom-btn-circle">
+                <div class="bottom-btn-circle-start" @click="start"></div>
+                <span>
+                    <strong>START</strong>
+                </span>
             </div>
-
         </div>
     </div>
 </template>
 
 <script>
     import { mapState } from 'vuex'
+    import Block from '../../block'
+    import { BLOCK_INDEX } from '../../const'
+    import { sound } from '../../common/sound'
+    // import { music } from '../../common/music'
 
     export default {
         name: 'KeyBoard',
-        // props: {
-        //     msg: String,
-        //     columnNum: Number,
-        //     rowNum: Number
-        // },
-        data: function () {
+
+        data() {
             return {
-                // matrix: [],
-                d1_matrix: [0, 0, 0, 0]
-            };
+                levelIdx: 0
+            }
         },
+
         computed: mapState([
+            'isGameOn',
+            'isStart', // 游戏开始状态
+            'isPause', // 暂停状态
+            'isSoundOn', // 声音状态
+            'gameOver',
             'columnNum',
             'rowNum',
             'matrix',
-            'accRowsList',
-            'gameOver'
+            'accRowsList'
         ]),
 
-        // created() {
-        //     this.start()
-        // },
         methods: {
+            onAndOff() {
+                if (!this.isGameOn) {
+                    if(this.isSoundOn) sound && sound.on()
+                    this.$store.commit({
+                        type: 'on'
+                    })
+                    return
+                }
+
+                this.$store.commit({
+                    type: 'off'
+                })
+
+            },
 
             start() {
-                alert('start')
+                if (!this.isGameOn) return
+
+                if (!this.isStart) {
+                    if(this.isSoundOn) sound && sound.gameStart()
+                    this.startGame()
+                }
+
+                if (this.isStart && this.isPause) {
+                    this.$store.commit({
+                        type: 'stopPause'
+                    })
+
+                    this.$store.commit({
+                        type: 'down'
+                    })
+                }
+            },
+            reset() {
+                if (!this.isGameOn) return
+                // this.isStart = true
+
+                if(this.isSoundOn) sound && sound.reset()
+
+                this.$store.commit({
+                    type: 'reset'
+                })
+            },
+
+            startGame() {
+                let block = this.getRandomBlock()
+                let nextBlock = this.getRandomBlock()
+
+                    !this.isStart && this.$store.commit({
+                        type: 'startGame',
+                        block
+                    })
+
+                this.$store.commit({
+                    type: 'setNextBlock',
+                    block: nextBlock
+                })
+
+                this.$store.commit({
+                    type: 'down'
+                })
             },
 
             left: function () {
+                if (!this.isStart) {
+                    if (this.levelIdx > 0) {
+                        this.$store.commit({
+                            type: 'setLevel',
+                            idx: --this.levelIdx
+                        })
+                    }
+                    return
+                }
+                if (this.isPause || this.gameOver) return
+
+                if(this.isSoundOn) sound && sound.move()
+
+                this.$store.commit({
+                    type: 'stopDown'
+                })
                 this.$store.commit({
                     type: 'left',
+                })
+                this.$store.commit({
+                    type: 'down',
                 })
             },
 
             right() {
+                if (!this.isStart) {
+                        if (this.levelIdx >= 0 && this.levelIdx < 2) {
+                            this.$store.commit({
+                                type: 'setLevel',
+                                idx: ++this.levelIdx
+                            })
+                        }
+                        return
+                }
+                if (this.isPause || this.gameOver) return
+
+                if(this.isSoundOn) sound && sound.move()
+
+                this.$store.commit({
+                    type: 'stopDown'
+                })
                 this.$store.commit({
                     type: 'right',
+                })
+                this.$store.commit({
+                    type: 'down',
                 })
             },
 
             rotate() {
+                if (!this.isStart || this.isPause || this.gameOver) return
+
+                if(this.isSoundOn) sound && sound.rotate()
+
                 this.$store.commit({
-                    type: 'stopDowm'
+                    type: 'stopDown'
                 })
 
                 this.$store.commit({
@@ -83,8 +193,12 @@
             },
 
             fall() {
+                if (!this.isStart || this.isPause) return
+
+                if(this.isSoundOn) sound && sound.fall()
+
                 this.$store.commit({
-                    type: 'stopDowm'
+                    type: 'stopDown'
                 })
 
                 this.$store.commit({
@@ -93,7 +207,28 @@
                 })
             },
 
+            pause() {
+                if (!this.isStart || this.isPause) return
 
+                this.$store.commit({
+                    type: 'pause'
+                })
+            },
+
+            // initMatrix() {
+            //     for (let i = 0; i < this.rowNum; i++) {
+            //         this.$set(this.matrix, i, new Array())
+            //         for (let j = 0; j < this.columnNum; j++) {
+            //             this.$set(this.matrix[i], j, 0)
+            //         }
+            //     }
+            // },
+
+            getRandomBlock() {
+                let random = Math.floor(Math.random() * BLOCK_INDEX.length)
+                let type = BLOCK_INDEX[random]
+                return new Block(type)
+            }
         }
     }
 </script>
