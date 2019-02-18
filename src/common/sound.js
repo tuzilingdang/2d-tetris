@@ -51,6 +51,22 @@ function getSound() {
                   getBuffer().start(0, 8.15, 0.7)
                 }
 
+                _sound.pause = () => {
+                  // 游戏暂停声音
+                  if (!store.state.isSoundOn) {
+                    return
+                  }
+                  getBuffer().start(0, 7.5, 0.4)
+                }
+
+                _sound.start = () => {
+                  // 游戏取消暂停声音
+                  if (!store.state.isSoundOn) {
+                    return
+                  }
+                  getBuffer().start(0, 6.6, 0.4)
+                }
+
                 _sound.reset = () => {
                   // 游戏开始声音
                   if (!store.state.isSoundOn) {

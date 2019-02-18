@@ -32,6 +32,7 @@
 
         #game {
             width: 90%;
+            max-width: 360px;
             height: 88vh;
             border: #c5bab9 3px solid;;
             border-radius: 40px;

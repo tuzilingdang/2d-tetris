@@ -45,6 +45,11 @@ class Block {
 
     left(matrix) {
         if (this.pos.y - 1 < 0) return false
+
+        for(let i = this.pos.x; i < this.pos.x  + this.shape.length; i++) {
+            if(matrix[i][this.pos.y - 1] == 1) return false
+        }
+    
         this.pos.y--;
 
         for (let i = 0; i < this.shape.length; i++) {
@@ -61,6 +66,10 @@ class Block {
     }
     right(matrix) {
         if (this.pos.y + 1 > matrix[0].length - this.shape[0].length) return false
+        for(let i = this.pos.x; i < this.pos.x  + this.shape.length; i++) {
+            if(matrix[i][this.pos.y + this.shape[0].length + 1] == 1) return false
+        }
+
         this.pos.y++;
         // if(this.pos.y > matrix[0].length - this.shape[0].length) return false
 

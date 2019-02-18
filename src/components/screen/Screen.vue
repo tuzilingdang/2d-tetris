@@ -19,7 +19,7 @@
             </div> -->
         </div>
 
-        <div class="screen-status" @click="status">
+        <div class="screen-status">
             <div class="screen-status-next screen-status-item" v-if="isGameOn">
                 <span>NEXT</span>
                 <div class="screen-status-nextshape-area ">
@@ -95,10 +95,6 @@
                 this.initMatrix()
                 // this.start()
                 this.initNextShapeMat()
-            },
-
-            status() {
-                alert('start')
             },
 
             getNextBlock() {

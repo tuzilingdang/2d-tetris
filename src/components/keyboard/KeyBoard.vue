@@ -4,14 +4,14 @@
             <div class="top-btn-item">
                 <span class="top-btn-item-txt" @click="reset">RESET</span>
             </div>
-            <div class="top-btn-item">
-                <span class="top-btn-item-txt" @click="pause">PAUSE</span>
+            <div class="top-btn-item" @click="pauseAndStart">
+                <span class="top-btn-item-txt">P/S</span>
             </div>
             <div class="top-btn-item">
                 <span class="top-btn-item-txt">SOUND</span>
             </div>
-            <div class="top-btn-item">
-                <span class="top-btn-item-txt" @click="onAndOff">ON/OFF</span>
+            <div class="top-btn-item" @click="onAndOff">
+                <span class="top-btn-item-txt">ON/OFF</span>
             </div>
         </div>
 
@@ -19,13 +19,13 @@
             <div class="bottom-btn-arrows">
                 <div class="left" @click="left"></div>
                 <div class="right" @click="right"></div>
-                <div class="up" @click="rotate"></div>
+                <div class="up"></div>
                 <div class="down" @click="fall"></div>
             </div>
             <div class="bottom-btn-circle">
-                <div class="bottom-btn-circle-start" @click="start"></div>
+                <div class="bottom-btn-circle-start" @click="rotate"></div>
                 <span>
-                    <strong>START</strong>
+                    <strong>ROTATE</strong>
                 </span>
             </div>
         </div>
@@ -44,7 +44,8 @@
 
         data() {
             return {
-                levelIdx: 0
+                levelIdx: 0,
+
             }
         },
 
@@ -74,6 +75,20 @@
                     type: 'off'
                 })
 
+            },
+
+            pauseAndStart() {
+                if (!this.isGameOn || this.gameOver) return
+                if(!this.isStart || this.isPause) {
+                    if(this.isSoundOn) sound && sound.start()
+                    this.start()
+                }
+                else {
+                    if(this.isStart) {
+                        if(this.isSoundOn) sound && sound.pause()
+                        this.pause()
+                    }
+                }
             },
 
             start() {
