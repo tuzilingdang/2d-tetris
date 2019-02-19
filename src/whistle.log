@@ -1,0 +1,18 @@
+
+From: whistle@1.9.3
+Node: v9.9.0
+Date: 2019-1-9 14:40:35
+TypeError: Cannot read property 'res' of null
+    at TLSSocket.socketCloseListener (_http_client.js:354:11)
+    at TLSSocket.emit (events.js:185:15)
+    at _handle.close (net.js:541:12)
+    at TCP.done [as _onclose] (_tls_wrap.js:379:7)
+
+From: whistle@1.9.3
+Node: v9.9.0
+Date: 2019-2-14 11:39:47
+TypeError: Cannot read property 'res' of null
+    at TLSSocket.socketCloseListener (_http_client.js:354:11)
+    at TLSSocket.emit (events.js:185:15)
+    at _handle.close (net.js:541:12)
+    at TCP.done [as _onclose] (_tls_wrap.js:379:7)
