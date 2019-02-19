@@ -1,13 +1,13 @@
 <template>
     <div class="keyboard">
         <div class="top-btn">
-            <div class="top-btn-item">
-                <span class="top-btn-item-txt" @click="reset">RESET</span>
+            <div class="top-btn-item" @click="reset">
+                <span class="top-btn-item-txt">RESET</span>
             </div>
             <div class="top-btn-item" @click="pauseAndStart">
                 <span class="top-btn-item-txt">P/S</span>
             </div>
-            <div class="top-btn-item">
+            <div class="top-btn-item" @click="soundControl">
                 <span class="top-btn-item-txt">SOUND</span>
             </div>
             <div class="top-btn-item" @click="onAndOff">
@@ -19,7 +19,7 @@
             <div class="bottom-btn-arrows">
                 <div class="left" @click="left"></div>
                 <div class="right" @click="right"></div>
-                <div class="up"></div>
+                <div class="up" @click="rotate"></div>
                 <div class="down" @click="fall"></div>
             </div>
             <div class="bottom-btn-circle">
@@ -33,10 +33,16 @@
 </template>
 
 <script>
-    import { mapState } from 'vuex'
+    import {
+        mapState
+    } from 'vuex'
     import Block from '../../block'
-    import { BLOCK_INDEX } from '../../const'
-    import { sound } from '../../common/sound'
+    import {
+        BLOCK_INDEX
+    } from '../../const'
+    import {
+        sound
+    } from '../../common/sound'
     // import { music } from '../../common/music'
 
     export default {
@@ -52,7 +58,7 @@
         computed: mapState([
             'isGameOn',
             'isStart', // 游戏开始状态
-            'isPause', // 暂停状态
+            'isPause', // 暂停/取消暂停状态
             'isSoundOn', // 声音状态
             'gameOver',
             'columnNum',
@@ -64,7 +70,7 @@
         methods: {
             onAndOff() {
                 if (!this.isGameOn) {
-                    if(this.isSoundOn) sound && sound.on()
+                    if (this.isSoundOn) sound && sound.on()
                     this.$store.commit({
                         type: 'on'
                     })
@@ -79,13 +85,12 @@
 
             pauseAndStart() {
                 if (!this.isGameOn || this.gameOver) return
-                if(!this.isStart || this.isPause) {
-                    if(this.isSoundOn) sound && sound.start()
+                if (!this.isStart || this.isPause) {
+                    if (this.isSoundOn) sound && sound.start()
                     this.start()
-                }
-                else {
-                    if(this.isStart) {
-                        if(this.isSoundOn) sound && sound.pause()
+                } else {
+                    if (this.isStart) {
+                        if (this.isSoundOn) sound && sound.pause()
                         this.pause()
                     }
                 }
@@ -95,7 +100,7 @@
                 if (!this.isGameOn) return
 
                 if (!this.isStart) {
-                    if(this.isSoundOn) sound && sound.gameStart()
+                    if (this.isSoundOn) sound && sound.gameStart()
                     this.startGame()
                 }
 
@@ -113,7 +118,7 @@
                 if (!this.isGameOn) return
                 // this.isStart = true
 
-                if(this.isSoundOn) sound && sound.reset()
+                if (this.isSoundOn) sound && sound.reset()
 
                 this.$store.commit({
                     type: 'reset'
@@ -140,6 +145,9 @@
             },
 
             left: function () {
+                if (this.isPause || this.gameOver) return
+                if (this.isSoundOn) sound && sound.move()
+
                 if (!this.isStart) {
                     if (this.levelIdx > 0) {
                         this.$store.commit({
@@ -149,9 +157,6 @@
                     }
                     return
                 }
-                if (this.isPause || this.gameOver) return
-
-                if(this.isSoundOn) sound && sound.move()
 
                 this.$store.commit({
                     type: 'stopDown'
@@ -165,18 +170,18 @@
             },
 
             right() {
-                if (!this.isStart) {
-                        if (this.levelIdx >= 0 && this.levelIdx < 2) {
-                            this.$store.commit({
-                                type: 'setLevel',
-                                idx: ++this.levelIdx
-                            })
-                        }
-                        return
-                }
                 if (this.isPause || this.gameOver) return
+                if (this.isSoundOn) sound && sound.move()
 
-                if(this.isSoundOn) sound && sound.move()
+                if (!this.isStart) {
+                    if (this.levelIdx >= 0 && this.levelIdx < 2) {
+                        this.$store.commit({
+                            type: 'setLevel',
+                            idx: ++this.levelIdx
+                        })
+                    }
+                    return
+                }
 
                 this.$store.commit({
                     type: 'stopDown'
@@ -192,7 +197,7 @@
             rotate() {
                 if (!this.isStart || this.isPause || this.gameOver) return
 
-                if(this.isSoundOn) sound && sound.rotate()
+                if (this.isSoundOn) sound && sound.rotate()
 
                 this.$store.commit({
                     type: 'stopDown'
@@ -210,7 +215,7 @@
             fall() {
                 if (!this.isStart || this.isPause) return
 
-                if(this.isSoundOn) sound && sound.fall()
+                if (this.isSoundOn) sound && sound.fall()
 
                 this.$store.commit({
                     type: 'stopDown'
@@ -230,14 +235,20 @@
                 })
             },
 
-            // initMatrix() {
-            //     for (let i = 0; i < this.rowNum; i++) {
-            //         this.$set(this.matrix, i, new Array())
-            //         for (let j = 0; j < this.columnNum; j++) {
-            //             this.$set(this.matrix[i], j, 0)
-            //         }
-            //     }
-            // },
+            soundControl() {
+                if (!this.isSoundOn) {
+                    this.$store.commit({
+                        type: 'soundOn'
+                    })
+                    return
+                }
+
+                if (this.isSoundOn) {
+                    this.$store.commit({
+                        type: 'soundOff'
+                    })
+                }
+            },
 
             getRandomBlock() {
                 let random = Math.floor(Math.random() * BLOCK_INDEX.length)

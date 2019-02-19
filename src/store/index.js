@@ -79,6 +79,11 @@ export default new Vuex.Store({
                     state.matrix[i].splice(j,1,0) 
                 }
             }
+            for (let i = 0; i < 2; i++) {
+                for (let j = 0; j < 3; j++) {
+                    state.nextShapeMat[i].splice(j,1,0) 
+                }
+            }
         },
 
         startGame(state, payload) {
@@ -134,6 +139,14 @@ export default new Vuex.Store({
 
         stopDown (state) {
             clearInterval(state.interval)
+        },
+
+        soundOn (state) {
+            state.isSoundOn = true
+        },
+
+        soundOff (state) {
+            state.isSoundOn = false
         },
 
         setCurBlock(state) {

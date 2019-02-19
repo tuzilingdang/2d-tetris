@@ -38,7 +38,14 @@
                 <span>LEVEL</span>
                 <p>{{level}}</p>
             </div>
-            <div class="screen-status-music screen-status-item"></div>
+            <div class="screen-status-gamestatus screen-status-item" v-if="isGameOn">
+                <span>STATUS</span>
+                <!-- <p>{{!this.isStart || this.isPause?'PAUSE':(this.isStart ?'START' :'READY')}}</p> -->
+                <p>{{!this.isStart ? 'READY':(this.isPause ? 'PAUSE' : 'START')}}</p>
+            </div>
+            <div class="screen-status-music screen-status-item" v-if="isGameOn">
+                <div class="sound" :class="isSoundOn?'sound_on':'sound_off'"></div>
+            </div>
         </div>
     </div>
 </template>
@@ -59,6 +66,7 @@
         computed: mapState([
             'isGameOn',
             'isSoundOn',
+            'isPause',
             'isStart',
             'score',
             'level',
@@ -93,7 +101,6 @@
         methods: {
             init() {
                 this.initMatrix()
-                // this.start()
                 this.initNextShapeMat()
             },
 
@@ -114,11 +121,8 @@
                     return
                 }
 
-                // let block = this.getRandomBlock()
-
                 this.$store.commit({
                     type: 'setCurBlock',
-                    // block
                 })
 
                 this.getNextBlock()

@@ -28,8 +28,8 @@
             position: absolute;
             width: 33%;
             height: 2vh;
-            left: 24%;
-            top: 46.5vh;
+            left: 22%;
+            top: 41.5vh;
             background: url(../../assets/game_over.png);
             background-repeat: no-repeat;
             background-size: 100% 100%;
@@ -39,7 +39,7 @@
             position: absolute;
             width: 30%;
             left: 25%;
-            top: 30vh;
+            top: 26vh;
         }
 
         .hidden {
@@ -79,6 +79,9 @@
         }
 
         &-level {
+            font-size: 0.8rem;
+        }
+        &-gamestatus {
             font-size: 0.8rem;
         }
     }
@@ -122,6 +125,23 @@
             display: block;
             padding-top: 100%;
             background: #666;
+        }
+    }
+
+
+    .screen-status-music {
+        .sound {
+            width: 1.6rem;
+            height: 1.6rem;
+            background-repeat: no-repeat;
+            background-size: 100% 100%;
+            margin: 0 auto;
+        }
+        .sound_on {
+            background-image: url('../../assets/voiceon.png')
+        }
+        .sound_off {
+            background-image: url('../../assets/voiceoff.png')
         }
     }
 }
