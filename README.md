@@ -4,9 +4,9 @@
 作为经典游戏之一，游戏机中的俄罗斯方块是童年的回忆，本游戏基于Vue，Vuex，vuecli实现了web版俄罗斯方块
 
 ### 界面显示
-![启动界面]("https://github.com/tuzilingdang/img-temp/blob/master/2dtetris-1.png?raw=true")
+![start1](https://github.com/tuzilingdang/img-temp/blob/master/2dtetris-lite-1.png?raw=true)
 
-![游戏界面]("https://github.com/tuzilingdang/img-temp/blob/master/2dtetris-2.png?raw=true")
+![start2](https://github.com/tuzilingdang/img-temp/blob/master/2dtetris-lite-2.png?raw=true)
 
 ### 本地运行
 下载源代码到本地，进入项目根路径，执行
