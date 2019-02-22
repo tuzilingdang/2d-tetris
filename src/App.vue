@@ -40,15 +40,16 @@
         margin-top: 2vh;
 
         #game {
-            width: 85%;
+            width: 90%;
             max-width: 360px;
             max-height: 610px;
-            height: 94vh;
+            height: 96vh;
 
             @media only screen and (device-width: 375px) and (device-height: 812px) and (-webkit-device-pixel-ratio: 3) {
                 // iphoneX css部分
                 height: 86vh;
                 width: 90%;
+                height: 94vh;
             }
 
             border: #c5bab9 3px solid;
